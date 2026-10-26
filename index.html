@@ -1,128 +1,395 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Trang học phần CO5085 — Học sâu và ứng dụng trong thị giác máy tính, Học kỳ 261. Học viên: Nguyễn Xuân Trường và Trần Lê Hoàng Long. Giảng viên: TS Lê Thành Sách.">
-  <meta name="theme-color" content="#205bd7">
-  <title>CO5085 · Học sâu và ứng dụng trong thị giác máy tính</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-  <a class="skip-link" href="#noi-dung">Đến nội dung chính</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#tong-quan" aria-label="CO5085 — về đầu trang">
-        <span class="brand-mark" aria-hidden="true">CO</span>
-        <span class="brand-label">CO5085<span>HỌC KỲ 261</span></span>
-      </a>
-      <nav aria-label="Điều hướng chính">
-        <a href="#hoc-vien">Học viên</a>
-        <a href="#bai-tap">Bài tập</a>
-        <a href="#tien-do">Tiến độ</a>
-      </nav>
-      <a class="github-link" href="https://github.com/truong1501/SDH_HK261_CO5085" aria-label="Repository GitHub của landing page">
-        <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.68.08-.68 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.62 1.22 3.26.93.1-.73.39-1.22.71-1.5-2.5-.29-5.13-1.25-5.13-5.57 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.97 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.61 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.69.11 2.97.72.79 1.16 1.79 1.16 3.02 0 4.33-2.63 5.28-5.14 5.56.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"/></svg>
-        <span>GitHub</span><span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  </header>
-
-  <main id="noi-dung">
-    <section class="hero container" id="tong-quan" aria-labelledby="course-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span aria-hidden="true"></span> HỒ SƠ HỌC PHẦN · HK261</p>
-        <h1 id="course-title">Học sâu và ứng dụng trong <span>thị giác máy tính.</span></h1>
-        <p class="hero-description">Trang tổng hợp bài tập, báo cáo và tài liệu thực hiện trong học phần <strong>CO5085</strong>.</p>
-        <a class="primary-link" href="#bai-tap">Xem các bài tập <span aria-hidden="true">↗</span></a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Trang học phần CO5085 — Học sâu và ứng dụng trong thị giác máy tính, Học kỳ 261. Học viên: Nguyễn Xuân Trường và Trần Lê Hoàng Long. Giảng viên: TS Lê Thành Sách."
+    />
+    <meta name="theme-color" content="#205bd7" />
+    <title>CO5085 · Học sâu và ứng dụng trong thị giác máy tính</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#noi-dung">Đến nội dung chính</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#tong-quan" aria-label="CO5085 — về đầu trang">
+          <span class="brand-mark" aria-hidden="true">CO</span>
+          <span class="brand-label">CO5085<span>HỌC KỲ 261</span></span>
+        </a>
+        <nav aria-label="Điều hướng chính">
+          <a href="#hoc-vien">Học viên</a>
+          <a href="#bai-tap">Bài tập</a>
+          <a href="#tien-do">Tiến độ</a>
+        </nav>
+        <a
+          class="github-link"
+          href="https://github.com/truong1501/SDH_HK261_CO5085"
+          aria-label="Repository GitHub của landing page"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="19"
+            height="19"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.68.08-.68 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.62 1.22 3.26.93.1-.73.39-1.22.71-1.5-2.5-.29-5.13-1.25-5.13-5.57 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.97 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.61 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.69.11 2.97.72.79 1.16 1.79 1.16 3.02 0 4.33-2.63 5.28-5.14 5.56.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"
+            />
+          </svg>
+          <span>GitHub</span><span aria-hidden="true">↗</span>
+        </a>
       </div>
-      <aside class="course-sheet" aria-label="Thông tin học phần">
-        <div class="sheet-top"><span>THÔNG TIN HỌC PHẦN</span><span class="sheet-symbol" aria-hidden="true">⌗</span></div>
-        <p class="course-code">CO5085</p>
-        <p class="course-caption">Học sâu và ứng dụng trong thị giác máy tính</p>
-        <dl class="course-facts">
-          <div><dt>Học kỳ</dt><dd>261</dd></div>
-          <div><dt>Giảng viên hướng dẫn</dt><dd>TS Lê Thành Sách</dd></div>
-          <div><dt>Học viên thực hiện</dt><dd>02 học viên</dd></div>
-        </dl>
-        <div class="sheet-bottom"><span class="small-dot" aria-hidden="true"></span> GitHub Pages · Trang nhóm học phần</div>
-      </aside>
-    </section>
+    </header>
 
-    <section class="section container" id="hoc-vien" aria-labelledby="students-title">
-      <div class="section-heading">
-        <div><p class="section-label">01 / THÀNH VIÊN</p><h2 id="students-title">Học viên thực hiện</h2></div>
-        <p class="section-note">Cùng thực hiện E1–E3, A1 và A2.</p>
-      </div>
-      <div class="students-wrap">
-        <table class="students-table">
-          <caption class="sr-only">Danh sách học viên và mã số học viên</caption>
-          <thead><tr><th scope="col">Họ và tên</th><th scope="col">Mã số học viên</th></tr></thead>
-          <tbody>
-            <tr><th scope="row"><span class="student-initials" aria-hidden="true">XT</span><span>Nguyễn Xuân Trường</span></th><td>2570526</td></tr>
-            <tr><th scope="row"><span class="student-initials second" aria-hidden="true">HL</span><span>Trần Lê Hoàng Long</span></th><td>2570443</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <main id="noi-dung">
+      <section
+        class="hero container"
+        id="tong-quan"
+        aria-labelledby="course-title"
+      >
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span aria-hidden="true"></span> HỒ SƠ HỌC PHẦN · HK261
+          </p>
+          <h1 id="course-title">
+            Học sâu và ứng dụng trong <span>thị giác máy tính.</span>
+          </h1>
+          <p class="hero-description">
+            Trang tổng hợp bài tập, báo cáo và tài liệu thực hiện trong học phần
+            <strong>CO5085</strong>.
+          </p>
+          <a class="primary-link" href="#bai-tap"
+            >Xem các bài tập <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <aside class="course-sheet" aria-label="Thông tin học phần">
+          <div class="sheet-top">
+            <span>THÔNG TIN HỌC PHẦN</span
+            ><span class="sheet-symbol" aria-hidden="true">⌗</span>
+          </div>
+          <p class="course-code">CO5085</p>
+          <p class="course-caption">
+            Học sâu và ứng dụng trong thị giác máy tính
+          </p>
+          <dl class="course-facts">
+            <div>
+              <dt>Học kỳ</dt>
+              <dd>261</dd>
+            </div>
+            <div>
+              <dt>Giảng viên hướng dẫn</dt>
+              <dd>TS Lê Thành Sách</dd>
+            </div>
+            <div>
+              <dt>Học viên thực hiện</dt>
+              <dd>02 học viên</dd>
+            </div>
+          </dl>
+          <div class="sheet-bottom">
+            <span class="small-dot" aria-hidden="true"></span> GitHub Pages ·
+            Trang nhóm học phần
+          </div>
+        </aside>
+      </section>
 
-    <section class="section assignments-section" id="bai-tap" aria-labelledby="assignments-title">
-      <div class="container">
+      <section
+        class="section container"
+        id="hoc-vien"
+        aria-labelledby="students-title"
+      >
         <div class="section-heading">
-          <div><p class="section-label">02 / NỘI DUNG HỌC PHẦN</p><h2 id="assignments-title">Bài tập &amp; bài tập lớn</h2></div>
-          <p class="section-note">Liên kết sản phẩm sẽ được bổ sung <br>theo từng mốc nộp bài.</p>
+          <div>
+            <p class="section-label">01 / THÀNH VIÊN</p>
+            <h2 id="students-title">Học viên thực hiện</h2>
+          </div>
+          <p class="section-note">Cùng thực hiện E1–E3, A1 và A2.</p>
         </div>
-        <div class="assignment-grid">
-          <article class="assignment-card" id="e1-e3">
-            <div class="card-top"><span class="assignment-code">E1–E3</span><span class="assignment-type">BÀI TẬP</span></div>
-            <h3>Nền tảng <br>phân loại ảnh</h3>
-            <p class="card-description">Softmax, MLP, CNN; Multi-Head Self-Attention và tokenization; LSTM và GRU trên chuỗi ảnh.</p>
-            <p class="card-deadline"><span>Hạn nộp</span> E1, E2: 02/11 · E3: 09/11/2026</p>
-            <dl class="resource-list">
-              <div><dt>Repository</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Báo cáo chung E1–E3</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Demo</dt><dd>Sẽ cập nhật</dd></div>
-            </dl>
-          </article>
-          <article class="assignment-card" id="a1">
-            <div class="card-top"><span class="assignment-code">A1</span><span class="assignment-type">BÀI TẬP LỚN</span></div>
-            <h3>CNN và <br>Transformer</h3>
-            <p class="card-description">So sánh hai họ kiến trúc trên tập ảnh lớn, với huấn luyện từ đầu, pretrained và các chế độ fine-tuning.</p>
-            <p class="card-deadline"><span>Hạn nộp</span> A1.1: 26/10 · A1.2: 09/11/2026</p>
-            <dl class="resource-list">
-              <div><dt>Repository</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Báo cáo</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Demo</dt><dd>Sẽ cập nhật</dd></div>
-            </dl>
-          </article>
-          <article class="assignment-card" id="a2">
-            <div class="card-top"><span class="assignment-code">A2</span><span class="assignment-type">BÀI TẬP LỚN</span></div>
-            <h3>Chủ đề tự chọn <br>&amp; phân tích paper</h3>
-            <p class="card-description">Xây dựng pipeline thị giác máy tính, so sánh phương pháp và phân tích một bài báo liên quan.</p>
-            <p class="card-deadline"><span>Hạn nộp</span> A2.1: 02/11 · A2.2: 16/11/2026</p>
-            <dl class="resource-list">
-              <div><dt>Repository</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Báo cáo</dt><dd>Sẽ cập nhật</dd></div>
-              <div><dt>Paper &amp; demo</dt><dd>Sẽ cập nhật</dd></div>
-            </dl>
-          </article>
+        <div class="students-wrap">
+          <table class="students-table">
+            <caption class="sr-only">
+              Danh sách học viên và mã số học viên
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Họ và tên</th>
+                <th scope="col">Mã số học viên</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <span class="student-initials" aria-hidden="true">XT</span
+                  ><span>Nguyễn Xuân Trường</span>
+                </th>
+                <td>2570526</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="student-initials second" aria-hidden="true"
+                    >HL</span
+                  ><span>Trần Lê Hoàng Long</span>
+                </th>
+                <td>2570443</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </section>
+
+      <section
+        class="section assignments-section"
+        id="bai-tap"
+        aria-labelledby="assignments-title"
+      >
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-label">02 / NỘI DUNG HỌC PHẦN</p>
+              <h2 id="assignments-title">Bài tập &amp; bài tập lớn</h2>
+            </div>
+            <p class="section-note">
+              Chọn từng thẻ để xem chi tiết. <br />Liên kết sản phẩm bổ sung theo
+              mốc nộp bài.
+            </p>
+          </div>
+          <div
+            class="assignment-grid"
+            role="tablist"
+            aria-label="Chọn bài tập để xem chi tiết"
+            data-tabs="assignments"
+          >
+            <article
+              class="assignment-card"
+              id="e1-e3"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-e1-e3"
+              tabindex="-1"
+            >
+              <div class="card-top">
+                <span class="assignment-code">E1–E3</span
+                ><span class="assignment-type">BÀI TẬP</span>
+              </div>
+              <h3>Nền tảng <br />phân loại ảnh</h3>
+              <p class="card-description">
+                Softmax, MLP, CNN; Multi-Head Self-Attention và tokenization;
+                LSTM và GRU trên chuỗi ảnh.
+              </p>
+              <p class="card-deadline">
+                <span>Hạn nộp</span> E1, E2: 02/11 · E3: 09/11/2026
+              </p>
+              <dl class="resource-list">
+                <div>
+                  <dt>Báo cáo chung E1–E3</dt>
+                  <dd>Sẽ cập nhật</dd>
+                </div>
+                <div>
+                  <dt>Demo</dt>
+                  <dd>Sẽ cập nhật</dd>
+                </div>
+              </dl>
+            </article>
+            <article
+              class="assignment-card"
+              id="a1"
+              role="tab"
+              aria-selected="true"
+              aria-controls="a1-1"
+              tabindex="0"
+            >
+              <div class="card-top">
+                <span class="assignment-code">A1</span
+                ><span class="assignment-type">BÀI TẬP LỚN</span>
+              </div>
+              <h3>CNN và <br />Transformer</h3>
+              <p class="card-description">
+                So sánh hai họ kiến trúc trên tập ảnh lớn, với huấn luyện từ
+                đầu, pretrained và các chế độ fine-tuning.
+              </p>
+              <p class="card-deadline">
+                <span>Hạn nộp</span> A1.1: 26/10 · A1.2: 09/11/2026
+              </p>
+              <dl class="resource-list">
+                <div>
+                  <dt>Báo cáo</dt>
+                  <dd class="is-link">A1.1 · Kế hoạch</dd>
+                </div>
+                <div>
+                  <dt>Demo</dt>
+                  <dd>Sẽ cập nhật</dd>
+                </div>
+              </dl>
+            </article>
+            <article
+              class="assignment-card"
+              id="a2"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-a2"
+              tabindex="-1"
+            >
+              <div class="card-top">
+                <span class="assignment-code">A2</span
+                ><span class="assignment-type">BÀI TẬP LỚN</span>
+              </div>
+              <h3>Chủ đề tự chọn <br />&amp; phân tích paper</h3>
+              <p class="card-description">
+                Xây dựng pipeline thị giác máy tính, so sánh phương pháp và phân
+                tích một bài báo liên quan.
+              </p>
+              <p class="card-deadline">
+                <span>Hạn nộp</span> A2.1: 02/11 · A2.2: 16/11/2026
+              </p>
+              <dl class="resource-list">
+                <div>
+                  <dt>Báo cáo</dt>
+                  <dd>Sẽ cập nhật</dd>
+                </div>
+                <div>
+                  <dt>Paper &amp; demo</dt>
+                  <dd>Sẽ cập nhật</dd>
+                </div>
+              </dl>
+            </article>
+          </div>
+          <div class="assignment-panels">
+            <section
+              class="plan-panel assignment-panel"
+              id="panel-e1-e3"
+              role="tabpanel"
+              aria-labelledby="e1-e3"
+              tabindex="0"
+              data-overview
+            ></section>
+            <section
+              class="plan-panel assignment-panel"
+              id="a1-1"
+              role="tabpanel"
+              aria-labelledby="a1"
+              tabindex="0"
+              data-plan="a1"
+            >
+              <noscript
+                ><p class="plan-fallback">
+                  A1.1 · Food-101, ResNet-50 vs DeiT-Small, 4 chế độ huấn luyện.
+                  Xem
+                  <a
+                    href="resources/A1.1%20%E2%80%94%20Dataset%20v%C3%A0%20Protocol%20th%C3%AD%20nghi%E1%BB%87m.pdf"
+                    >bản kế hoạch PDF</a
+                  >.
+                </p></noscript
+              >
+            </section>
+            <section
+              class="plan-panel assignment-panel"
+              id="panel-a2"
+              role="tabpanel"
+              aria-labelledby="a2"
+              tabindex="0"
+              data-overview
+            ></section>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="section container timeline-section"
+        id="tien-do"
+        aria-labelledby="timeline-title"
+      >
+        <div class="timeline-intro">
+          <p class="section-label">03 / CÁC MỐC NỘP BÀI</p>
+          <h2 id="timeline-title">Lộ trình học kỳ</h2>
+          <p>
+            Các hạn nộp lúc <strong>23:59</strong>, <br />giờ Việt Nam (GMT+7).
+          </p>
+          <span class="year-label">THÁNG 10 — 11 / 2026</span>
+        </div>
+        <ol class="timeline">
+          <li>
+            <div class="timeline-date">
+              <time datetime="2026-10-19T23:59:00+07:00"
+                >19<span>/10</span></time
+              ><span class="week" title="Tuần lịch ISO">Tuần 43</span>
+            </div>
+            <div class="timeline-detail">
+              <h3>Trang GitHub Pages</h3>
+              <p>Thông tin nhóm và khung trang tổng hợp học phần.</p>
+            </div>
+          </li>
+          <li>
+            <div class="timeline-date">
+              <time datetime="2026-10-26T23:59:00+07:00"
+                >26<span>/10</span></time
+              ><span class="week" title="Tuần lịch ISO">Tuần 44</span>
+            </div>
+            <div class="timeline-detail">
+              <h3>A1.1 · Dataset &amp; protocol</h3>
+              <p>Dataset, kiến trúc và kế hoạch thí nghiệm CNN/Transformer.</p>
+            </div>
+          </li>
+          <li>
+            <div class="timeline-date">
+              <time datetime="2026-11-02T23:59:00+07:00"
+                >02<span>/11</span></time
+              ><span class="week" title="Tuần lịch ISO">Tuần 45</span>
+            </div>
+            <div class="timeline-detail">
+              <h3>E1 + E2 &amp; A2.1</h3>
+              <p>
+                Code và báo cáo E1/E2; chủ đề, paper, dữ liệu và kế hoạch A2.
+              </p>
+            </div>
+          </li>
+          <li>
+            <div class="timeline-date">
+              <time datetime="2026-11-09T23:59:00+07:00"
+                >09<span>/11</span></time
+              ><span class="week" title="Tuần lịch ISO">Tuần 46</span>
+            </div>
+            <div class="timeline-detail">
+              <h3>E3 &amp; A1.2</h3>
+              <p>
+                Cập nhật báo cáo chung E1–E3; kết quả so sánh và báo cáo A1.
+              </p>
+            </div>
+          </li>
+          <li>
+            <div class="timeline-date">
+              <time datetime="2026-11-16T23:59:00+07:00"
+                >16<span>/11</span></time
+              ><span class="week" title="Tuần lịch ISO">Tuần 47</span>
+            </div>
+            <div class="timeline-detail">
+              <h3>A2.2 · Hoàn thiện bài tập lớn</h3>
+              <p>
+                Pipeline, so sánh phương pháp, phân tích paper, báo cáo và demo.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>
+          <strong>CO5085</strong
+          ><span>Học sâu và ứng dụng trong thị giác máy tính</span>
+        </p>
+        <a href="https://github.com/truong1501/SDH_HK261_CO5085"
+          >Mã nguồn trang <span aria-hidden="true">↗</span></a
+        ><span class="footer-term">Học kỳ 261</span>
       </div>
-    </section>
-
-    <section class="section container timeline-section" id="tien-do" aria-labelledby="timeline-title">
-      <div class="timeline-intro"><p class="section-label">03 / CÁC MỐC NỘP BÀI</p><h2 id="timeline-title">Lộ trình học kỳ</h2><p>Các hạn nộp lúc <strong>23:59</strong>, <br>giờ Việt Nam (GMT+7).</p><span class="year-label">THÁNG 10 — 11 / 2026</span></div>
-      <ol class="timeline">
-        <li><div class="timeline-date"><time datetime="2026-10-19T23:59:00+07:00">19<span>/10</span></time><span class="week" title="Tuần lịch ISO">Tuần 43</span></div><div class="timeline-detail"><h3>Trang GitHub Pages</h3><p>Thông tin nhóm và khung trang tổng hợp học phần.</p></div></li>
-        <li><div class="timeline-date"><time datetime="2026-10-26T23:59:00+07:00">26<span>/10</span></time><span class="week" title="Tuần lịch ISO">Tuần 44</span></div><div class="timeline-detail"><h3>A1.1 · Dataset &amp; protocol</h3><p>Dataset, kiến trúc và kế hoạch thí nghiệm CNN/Transformer.</p></div></li>
-        <li><div class="timeline-date"><time datetime="2026-11-02T23:59:00+07:00">02<span>/11</span></time><span class="week" title="Tuần lịch ISO">Tuần 45</span></div><div class="timeline-detail"><h3>E1 + E2 &amp; A2.1</h3><p>Code và báo cáo E1/E2; chủ đề, paper, dữ liệu và kế hoạch A2.</p></div></li>
-        <li><div class="timeline-date"><time datetime="2026-11-09T23:59:00+07:00">09<span>/11</span></time><span class="week" title="Tuần lịch ISO">Tuần 46</span></div><div class="timeline-detail"><h3>E3 &amp; A1.2</h3><p>Cập nhật báo cáo chung E1–E3; kết quả so sánh và báo cáo A1.</p></div></li>
-        <li><div class="timeline-date"><time datetime="2026-11-16T23:59:00+07:00">16<span>/11</span></time><span class="week" title="Tuần lịch ISO">Tuần 47</span></div><div class="timeline-detail"><h3>A2.2 · Hoàn thiện bài tập lớn</h3><p>Pipeline, so sánh phương pháp, phân tích paper, báo cáo và demo.</p></div></li>
-      </ol>
-    </section>
-  </main>
-
-  <footer class="site-footer"><div class="container footer-inner"><p><strong>CO5085</strong><span>Học sâu và ứng dụng trong thị giác máy tính</span></p><a href="https://github.com/truong1501/SDH_HK261_CO5085">Mã nguồn trang <span aria-hidden="true">↗</span></a><span class="footer-term">Học kỳ 261</span></div></footer>
-</body>
+    </footer>
+    <script src="assets/js/a1-plan.data.js" defer></script>
+    <script src="assets/js/a1-plan.js" defer></script>
+    <script src="assets/js/assignments.data.js" defer></script>
+    <script src="assets/js/assignment-tabs.js" defer></script>
+  </body>
 </html>
