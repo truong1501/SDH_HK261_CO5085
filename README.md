@@ -41,3 +41,4 @@ Các mốc dưới đây thuộc năm **2026**. Hạn nộp lúc **23:59, giờ 
 
 - [Trang GitHub Pages](https://truong1501.github.io/SDH_HK261_CO5085/)
 - [Repository trang học phần](https://github.com/truong1501/SDH_HK261_CO5085)
+- [Link reports A1.1](https://truong1501.github.io/SDH_HK261_CO5085/reports/A1.1_Dataset-Protocol.pdf)
