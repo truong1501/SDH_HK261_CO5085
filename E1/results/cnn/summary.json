@@ -1,0 +1,10 @@
+{
+  "model": "cnn",
+  "seed": 42,
+  "epochs": 15,
+  "batch_size": 128,
+  "lr": 0.001,
+  "num_params": 421834,
+  "best_val_acc": 0.9176,
+  "train_time_sec": 236.17819833755493
+}
