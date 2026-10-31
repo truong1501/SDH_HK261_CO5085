@@ -120,7 +120,7 @@ def plot_misclassified(
     chosen = wrong_idx[:n]
     cols = 6
     rows = max(1, int(np.ceil(len(chosen) / cols)))
-    fig, axes = plt.subplots(rows, cols, figsize=(cols * 1.6, rows * 1.8))
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 1.6, rows * 2.3))
     axes = np.atleast_1d(axes).ravel()
 
     for ax, idx in zip(axes, chosen):
@@ -132,7 +132,7 @@ def plot_misclassified(
         ax.axis("off")
 
     fig.suptitle(f"Mau du doan sai — {model_name}", fontsize=10)
-    fig.tight_layout()
+    fig.tight_layout(h_pad=3.0, rect=(0, 0, 1, 0.95))
     fig.savefig(RESULTS_DIR / f"misclassified_{model_name}.png", dpi=150)
     plt.close(fig)
 

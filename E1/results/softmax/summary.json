@@ -1,0 +1,10 @@
+{
+  "model": "softmax",
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 128,
+  "lr": 0.001,
+  "num_params": 7850,
+  "best_val_acc": 0.7966,
+  "train_time_sec": 295.04882979393005
+}
