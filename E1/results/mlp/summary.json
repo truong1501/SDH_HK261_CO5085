@@ -1,0 +1,10 @@
+{
+  "model": "mlp",
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 128,
+  "lr": 0.001,
+  "num_params": 235146,
+  "best_val_acc": 0.8732,
+  "train_time_sec": 299.68114018440247
+}

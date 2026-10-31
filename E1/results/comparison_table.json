@@ -1,0 +1,26 @@
+[
+  {
+    "model": "softmax",
+    "num_params": 7850,
+    "best_val_acc": 0.7966,
+    "test_acc": 0.7905,
+    "test_macro_f1": 0.787838736945488,
+    "train_time_sec": 295.04882979393005
+  },
+  {
+    "model": "mlp",
+    "num_params": 235146,
+    "best_val_acc": 0.8732,
+    "test_acc": 0.8739,
+    "test_macro_f1": 0.8736322527392109,
+    "train_time_sec": 299.68114018440247
+  },
+  {
+    "model": "cnn",
+    "num_params": 421834,
+    "best_val_acc": 0.9176,
+    "test_acc": 0.9145,
+    "test_macro_f1": 0.913881405596492,
+    "train_time_sec": 236.17819833755493
+  }
+]

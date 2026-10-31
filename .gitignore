@@ -1,7 +1,6 @@
 .DS_Store
 
-# E1: raw dataset downloaded by torchvision, local results/checkpoints
+# E1: raw dataset downloaded by torchvision (checkpoints in results/ are small, kept in git)
 E1/data/
-E1/results/*.pt
 __pycache__/
 *.pyc
