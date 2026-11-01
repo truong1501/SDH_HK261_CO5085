@@ -4,3 +4,6 @@
 E1/data/
 __pycache__/
 *.pyc
+
+# E2: checkpoint de resume (co ca optimizer), khong commit; best.pt nho thi giu
+**/last.pt
