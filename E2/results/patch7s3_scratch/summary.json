@@ -1,0 +1,22 @@
+{
+  "exp": "patch7s3_scratch",
+  "tokenizer": "patch7s3",
+  "attn_impl": "scratch",
+  "dim": 64,
+  "depth": 4,
+  "num_heads": 4,
+  "mlp_ratio": 2,
+  "dropout": 0.1,
+  "num_tokens": 64,
+  "seed": 42,
+  "epochs": 30,
+  "batch_size": 128,
+  "lr": 0.001,
+  "weight_decay": 0.05,
+  "subset": null,
+  "device": "cuda",
+  "num_params": 142090,
+  "best_val_acc": 0.8882,
+  "train_time_sec": 264.5787944793701,
+  "avg_epoch_sec": 8.819293149312337
+}
