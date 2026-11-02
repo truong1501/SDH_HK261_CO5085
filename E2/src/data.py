@@ -1,7 +1,7 @@
 """DataLoader cho E2: dùng lại đúng dataset + split của E1 (Fashion-MNIST, seed 42,
 train 55k / validation 5k / test 10k), theo yêu cầu "cùng tập ảnh cho E1–E3".
 
-Index split nằm ở E1/splits/ (sinh tự động lần đầu), nên E1, E2, E3 luôn cùng split.
+Index split nằm ở E1/splits/ (sinh tự động lần đầu), E1, E2, E3 dùng chung.
 Tham số `data_dir` cho phép đặt dữ liệu ở chỗ khác (vd. Google Drive / ổ /content trên Colab).
 """
 

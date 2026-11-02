@@ -1,0 +1,22 @@
+{
+  "exp": "row_scratch",
+  "tokenizer": "row",
+  "attn_impl": "scratch",
+  "dim": 64,
+  "depth": 4,
+  "num_heads": 4,
+  "mlp_ratio": 2,
+  "dropout": 0.1,
+  "num_tokens": 28,
+  "seed": 42,
+  "epochs": 30,
+  "batch_size": 128,
+  "lr": 0.001,
+  "weight_decay": 0.05,
+  "subset": null,
+  "device": "cuda",
+  "num_params": 138442,
+  "best_val_acc": 0.8942,
+  "train_time_sec": 255.79389929771423,
+  "avg_epoch_sec": 8.526463309923807
+}

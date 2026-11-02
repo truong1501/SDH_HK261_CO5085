@@ -35,9 +35,9 @@ class ScratchMSA(nn.Module):
         self.head_dim = dim // num_heads
         self.scale = self.head_dim ** -0.5  # 1 / sqrt(d_h)
 
-        # Gop 3 phep chieu Q, K, V vao 1 Linear (D -> 3D) cho nhanh.
+        # Gop 3 phep chieu Q, K, V vao 1 Linear (D -> 3D).
         # Thu tu trong trong so: [W_q; W_k; W_v], moi khoi D hang, moi khoi lai chia
-        # thanh h head lien tiep -> giong het cach nn.MultiheadAttention luu in_proj_weight,
+        # thanh h head lien tiep, cung thu tu voi in_proj_weight cua nn.MultiheadAttention,
         # nen co the copy trong so qua lai de kiem tra (xem check_msa.py).
         self.qkv = nn.Linear(dim, 3 * dim)
         self.out_proj = nn.Linear(dim, dim)  # W_o
@@ -87,8 +87,7 @@ class TorchMSA(nn.Module):
         self.proj_drop = nn.Dropout(proj_dropout)
 
     def forward(self, x: torch.Tensor, return_attn: bool = False):
-        # need_weights=False cho phep PyTorch dung kernel fused (scaled_dot_product_attention)
-        # -> nhanh hon; day la mot ly do khi so sanh thoi gian voi ban tu viet.
+        # Chi lay attention khi can ve hinh; khi train de need_weights=False.
         out, attn = self.mha(
             x, x, x, need_weights=return_attn, average_attn_weights=False
         )

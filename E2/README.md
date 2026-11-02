@@ -1,7 +1,7 @@
 # E2 — Transformer: Multi-Head Self-Attention (MSA) và tokenization
 
-Dataset: **Fashion-MNIST**, dùng **đúng split của E1** (seed 42; train 55k / validation 5k / test 10k).
-`src/data.py` gọi lại `E1/src/data.py`, nên E1, E2, E3 luôn dùng cùng một split.
+Dataset: Fashion-MNIST, dùng split của E1 (seed 42; train 55k / validation 5k / test 10k).
+`src/data.py` gọi lại `E1/src/data.py`, nên E1, E2, E3 dùng chung một split.
 
 ## Ý tưởng
 
@@ -21,9 +21,10 @@ Một mô hình Transformer phân loại ảnh gồm ba phần:
   không dùng `nn.MultiheadAttention`.
 - **MSA PyTorch** (`TorchMSA`): bọc `nn.MultiheadAttention`.
 
-Hai bản có cùng giao diện, nên mô hình chỉ khác nhau ở đúng một module này.
-`src/check_msa.py` chứng minh bản tự viết đúng: nó copy trọng số của bản PyTorch sang bản tự viết, cho
-cùng input, rồi so output, attention và gradient. Sai lệch chỉ ở mức làm tròn float32.
+Hai bản có cùng giao diện, các phần còn lại của mô hình dùng chung. Khởi tạo trọng số khác nhau:
+`nn.MultiheadAttention` dùng Xavier, bản tự viết dùng mặc định của `nn.Linear`.
+`src/check_msa.py` copy trọng số của bản PyTorch sang bản tự viết, cho cùng input, rồi so output,
+attention và gradient. Kết quả lưu ở `results/msa_check.json`.
 
 Bốn cách lấy token được cài đặt như sau:
 
@@ -62,19 +63,17 @@ E2/
 │   ├── check_msa.py    # kiểm chứng MSA tự viết == nn.MultiheadAttention
 │   ├── train.py        # training loop tự viết (forward/loss/backward/step), có --resume
 │   └── evaluate.py     # test accuracy, F1, thời gian, bảng + biểu đồ + attention map
+├── tests/test_msa.py   # đối chiếu output, attention, gradient của hai bản MSA
 ├── notebooks/E2_Colab.ipynb
 └── results/            # log, best.pt, bảng, biểu đồ (last.pt không commit)
 ```
 
 ## Môi trường
 
-- **Colab (khuyến nghị):** mở `notebooks/E2_Colab.ipynb` và bật GPU. Có hai cách đưa code lên:
-  `SOURCE = "zip"`: nén `E1/src` và `E2/` rồi upload, không cần push.
-  ```bash
-  # chạy ở thư mục gốc repo
-  zip -r ../code_E1_E2.zip E1/src E2 -x "*/results/*" "*__pycache__*"
-  ```
-  `SOURCE = "github"`: notebook `git clone` repo, cần push code trước.
+- **Colab:** repo nằm trên Google Drive (`Exercises/SDH_HK261_CO5085`) và được Google
+  Drive for desktop đồng bộ với máy. Sửa code trên máy, Colab mount Drive là chạy được bản mới. Mở
+  `notebooks/E2_Colab.ipynb` và bật GPU. Dữ liệu nằm ở `Exercises/data/`, checkpoint để resume
+  (`last.pt`) ở `Exercises/E2/ckpt/`, cả hai đều ngoài repo. Git chỉ chạy trên máy, Colab không chạy git.
 - **Máy cá nhân** (Python 3.10–3.12; Mac tự dùng GPU Apple qua MPS):
 
 ```bash
@@ -85,7 +84,7 @@ pip install -r E2/requirements.txt
 ## Chạy (từ thư mục `E2/`)
 
 ```bash
-python -m src.check_msa                      # 1. kiểm tra MSA tự viết
+python -m src.check_msa                      # 1. kiểm tra MSA tự viết (python -m unittest tests.test_msa để kiểm tra thêm)
 python -m src.models                         # 2. in số token + số tham số mỗi cấu hình
 python -m src.train --exp patch4_scratch --subset 2000 --epochs 1   # 3. chạy thử nhanh
 
@@ -100,6 +99,8 @@ python -m src.evaluate                       # 5. bảng + biểu đồ vào res
 Các tùy chọn hữu ích: `--device cpu|cuda|mps`, `--data-dir <thư mục dữ liệu>`,
 `--ckpt-dir <vd Google Drive>` (nơi lưu `last.pt`), `--resume` (train tiếp nếu Colab bị ngắt).
 
+Chạy `src.train` không kèm `--out-dir` sẽ ghi đè `results/<exp>/`, nên chạy thử thì đặt `--out-dir` riêng.
+
 ## Kết quả sinh ra (`results/`)
 
 - `<exp>/history.csv`, `summary.json`, `best.pt`: log từng epoch (có thời gian mỗi epoch), cấu hình,
@@ -108,3 +109,6 @@ Các tùy chọn hữu ích: `--device cpu|cuda|mps`, `--data-dir <thư mục d�
 - `comparison_table.{csv,json}`, `table_attention.csv`, `table_tokenizers.csv`: số liệu cho báo cáo.
 - `curves_attention.png`, `curves_tokenizers.png`: đường cong loss và accuracy.
 - `confusion_matrix_<exp>.png`, `attention_maps.png`: phân tích lỗi và vùng ảnh mà token CLS chú ý.
+- `eda/`: số ảnh mỗi lớp và ảnh mẫu, sinh từ mục 3b của notebook.
+
+Báo cáo chung E1–E3: [reports/exercises.pdf](../reports/exercises.pdf).

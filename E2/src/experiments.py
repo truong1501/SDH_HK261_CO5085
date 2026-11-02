@@ -1,7 +1,7 @@
 """Danh sách thí nghiệm E2 (config cố định để tái lập).
 
 Mỗi thí nghiệm = (cách tokenize, bản MSA). Kiến trúc encoder và siêu tham số huấn luyện
-giống nhau cho mọi thí nghiệm, nên khác biệt kết quả chỉ đến từ tokenizer hoặc MSA.
+giống nhau cho mọi thí nghiệm.
 
 So sánh theo đề:
   (i)  MSA tự viết vs MSA PyTorch, cùng tokenize  -> COMPARE_ATTENTION

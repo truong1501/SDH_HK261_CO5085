@@ -1,10 +1,10 @@
-"""Kiểm tra MSA tự viết ĐÚNG bằng cách so với nn.MultiheadAttention.
+"""So MSA tự viết với nn.MultiheadAttention.
 
-Ý tưởng: copy trọng số của bản PyTorch sang bản tự viết, cho cùng một input, rồi so:
+Copy trọng số của bản PyTorch sang bản tự viết, cho cùng một input, rồi so:
   1. output (B, N, D)
   2. attention weights từng head (B, h, N, N)
-  3. gradient theo input (đảm bảo backward cũng giống)
-Nếu sai lệch chỉ ở mức sai số làm tròn float32 (~1e-6) thì hai bản tương đương về toán học.
+  3. gradient theo input
+Đạt khi sai lệch dưới 1e-5 (output, attention) và 1e-4 (gradient).
 
 Chạy:  python -m src.check_msa
 """
@@ -55,7 +55,8 @@ def check(dim: int = 64, num_heads: int = 4, batch: int = 8, n_tokens: int = 50,
         "attention_rows_sum_to_1": bool(torch.allclose(attn_mine.sum(-1), torch.ones(1))),
     }
     res["passed"] = bool(
-        res["max_abs_diff_output"] < 1e-5
+        res["attention_rows_sum_to_1"]
+        and res["max_abs_diff_output"] < 1e-5
         and res["max_abs_diff_attention"] < 1e-5
         and res["max_abs_diff_grad_input"] < 1e-4
     )

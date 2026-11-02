@@ -4,8 +4,7 @@
 Khối encoder (pre-norm, như ViT):
     x = x + MSA(LN(x))
     x = x + FFN(LN(x))       FFN = Linear(D, r*D) -> GELU -> Linear(r*D, D)
-MSA có thể là bản tự viết hoặc bản PyTorch (tham số attn_impl), phần còn lại giống hệt,
-nên khác biệt giữa hai bản chỉ nằm ở MSA.
+MSA là bản tự viết hoặc bản PyTorch (tham số attn_impl), các phần còn lại dùng chung.
 """
 
 from __future__ import annotations

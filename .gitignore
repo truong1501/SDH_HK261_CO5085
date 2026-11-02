@@ -7,3 +7,6 @@ __pycache__/
 
 # E2: checkpoint de resume (co ca optimizer), khong commit; best.pt nho thi giu
 **/last.pt
+
+# Windows Explorer folder metadata
+desktop.ini

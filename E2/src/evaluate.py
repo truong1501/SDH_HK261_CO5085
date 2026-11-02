@@ -203,7 +203,7 @@ def main(args: argparse.Namespace) -> None:
     if tok:
         plot_curves(tok, results_dir, results_dir / "curves_tokenizers.png", "(ii) So sanh cach tokenize (MSA tu viet)")
 
-    best = max(rows, key=lambda r: r["test_acc"])
+    best = max(rows, key=lambda r: r["best_val_acc"])
     plot_confusion(best, results_dir / f"confusion_matrix_{best['exp']}.png")
 
     vis = [e for e in done if EXPERIMENTS[e]["tokenizer"] in ("patch4", "cnnstem")]

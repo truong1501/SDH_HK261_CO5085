@@ -9,8 +9,8 @@
 Mỗi tokenizer có thuộc tính `num_tokens` (để tạo positional embedding) và `grid`
 (hình dạng lưới (gh, gw) của token, dùng khi vẽ attention map; None nếu không có lưới 2D).
 
-Ghi chú: token theo từng pixel (N = 784) không dùng vì attention có chi phí O(N^2):
-784^2 ≈ 615k cặp/ảnh/head, quá nặng so với lợi ích trên ảnh 28x28.
+Ghi chú: không dùng token theo từng pixel (N = 784) vì attention có chi phí O(N^2):
+784^2 ≈ 615k cặp/ảnh/head.
 """
 
 from __future__ import annotations

@@ -46,8 +46,7 @@ def sync(device: torch.device) -> None:
 
 
 def warmup_cosine(total_steps: int, warmup_steps: int):
-    """He so lr: tang tuyen tinh trong warmup, sau do giam theo cosine ve 0.
-    Transformer tren du lieu nho thuong can warmup de khong bi mat on dinh luc dau."""
+    """He so lr: tang tuyen tinh trong warmup, sau do giam theo cosine ve 0."""
 
     def fn(step: int) -> float:
         if step < warmup_steps:
