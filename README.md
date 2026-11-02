@@ -19,11 +19,11 @@ Trang tổng hợp liên kết tới mã nguồn, báo cáo và các sản phẩ
 | --- | --- | --- | --- |
 | E1–E3 | Softmax, MLP, CNN; MSA và tokenization; LSTM/GRU | [Repository](https://github.com/truong1501/SDH_HK261_CO5085) | [Báo cáo E1–E3](reports/exercises.pdf) |
 | A1 | So sánh CNN và Transformer trên tập ảnh lớn | Sẽ cập nhật | Sẽ cập nhật |
-| A2 | Chủ đề thị giác máy tính tự chọn và phân tích paper | Sẽ cập nhật | Sẽ cập nhật |
+| A2 | Phân đoạn ngữ nghĩa trên Pascal VOC 2012; phân tích paper DeepLabv3 | [A2](A2/README.md) | [A2.1](A2/README.md) |
 
 - **E1–E3:** dùng một báo cáo PDF chung, cập nhật theo từng mốc.
 - **A1:** liên kết dataset, báo cáo và demo sẽ cập nhật tại đây.
-- **A2:** chủ đề, paper, dataset, báo cáo và video demo sẽ cập nhật tại đây.
+- **A2:** chủ đề, paper, dữ liệu và kế hoạch ở [A2/README.md](A2/README.md); báo cáo và video demo sẽ cập nhật tại đây.
 
 ## Lịch nộp bài
 
