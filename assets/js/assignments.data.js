@@ -1,4 +1,4 @@
-// Nội dung panel cho tab E1–E3 và A2 (tab A1 dùng a1-plan.data.js).
+// Nội dung panel cho tab A2 (tab A1 dùng a1-plan.data.js, tab E1–E3 dùng e1-plan.data.js).
 // Key trùng với id của thẻ tab trong index.html.
 window.ASSIGNMENT_PANELS = {
   "e1-e3": {

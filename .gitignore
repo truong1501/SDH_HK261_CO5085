@@ -5,6 +5,12 @@ E1/data/
 __pycache__/
 *.pyc
 
+# LaTeX build artifacts (reports/*.tex source and reports/*.pdf output are kept)
+reports/*.aux
+reports/*.log
+reports/*.out
+reports/*.toc
+reports/build/
 # E2: checkpoint de resume (co ca optimizer), khong commit; best.pt nho thi giu
 **/last.pt
 
