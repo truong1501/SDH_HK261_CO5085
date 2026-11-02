@@ -36,7 +36,7 @@ window.ASSIGNMENT_PANELS = {
       },
     ],
     resources: [
-      ["Báo cáo chung E1–E3", "Sẽ cập nhật"],
+      ["Báo cáo chung E1–E3", "reports/exercises.pdf"],
       ["Demo", "Sẽ cập nhật"],
     ],
   },
@@ -76,8 +76,8 @@ window.ASSIGNMENT_PANELS = {
       },
     ],
     resources: [
-      ["Báo cáo", "Sẽ cập nhật"],
-      ["Paper & demo", "Sẽ cập nhật"],
+      ["A2.1 · Chủ đề", "Phân đoạn ngữ nghĩa, Pascal VOC 2012 (A2/README.md)"],
+      ["Paper", "DeepLabv3, arXiv:1706.05587"],
     ],
   },
 };
