@@ -1,0 +1,18 @@
+{
+  "seed": 42,
+  "val_per_class": 500,
+  "num_train": 55000,
+  "num_val": 5000,
+  "class_names": [
+    "T-shirt/top",
+    "Trouser",
+    "Pullover",
+    "Dress",
+    "Coat",
+    "Sandal",
+    "Shirt",
+    "Sneaker",
+    "Bag",
+    "Ankle boot"
+  ]
+}

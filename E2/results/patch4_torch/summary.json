@@ -1,0 +1,22 @@
+{
+  "exp": "patch4_torch",
+  "tokenizer": "patch4",
+  "attn_impl": "torch",
+  "dim": 64,
+  "depth": 4,
+  "num_heads": 4,
+  "mlp_ratio": 2,
+  "dropout": 0.1,
+  "num_tokens": 49,
+  "seed": 42,
+  "epochs": 30,
+  "batch_size": 128,
+  "lr": 0.001,
+  "weight_decay": 0.05,
+  "subset": null,
+  "device": "cuda",
+  "num_params": 139018,
+  "best_val_acc": 0.8832,
+  "train_time_sec": 267.12190198898315,
+  "avg_epoch_sec": 8.904063399632772
+}

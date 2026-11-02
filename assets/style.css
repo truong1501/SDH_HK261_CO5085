@@ -16,3 +16,4 @@
 @media(prefers-reduced-motion:reduce){.assignment-card.is-tab{transition:border-color .2s,box-shadow .2s}.assignment-card.is-tab:hover{transform:none}.assignment-card.is-flipping,.assignment-panel.is-entering,.assignment-panel.is-entering>*,.assignment-panel.is-sliding>*{animation:none}.is-accordion .assignment-card:before{transition:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.primary-link{transition:none}.primary-link:hover{transform:none}}
 @media print{.site-header{position:static}nav,.github-link,.primary-link,.skip-link{display:none}.container{width:100%}.hero{padding-block:20px;gap:30px}.section{padding-block:25px}.assignment-card,.plan-block,.mode-card{break-inside:avoid}.timeline-section{padding-block:25px}.site-footer{padding-block:10px}}
+.resource-list dd a{color:inherit;text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:6px 8px;margin:-6px -8px}

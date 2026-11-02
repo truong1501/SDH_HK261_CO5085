@@ -90,7 +90,7 @@
       '<p class="plan-block-label"><span>↗</span>Liên kết sản phẩm</p>' +
       '<dl class="resource-list">' +
       list(item.resources, function (r) {
-        return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>";
+        return "<div><dt>" + esc(r[0]) + "</dt><dd>" + (r[2] ? '<a href="' + esc(r[2]) + '">' + esc(r[1]) + "</a>" : esc(r[1])) + "</dd></div>";
       }) +
       "</dl></div>"
     );
@@ -319,11 +319,13 @@
   }
 
   tabs.forEach(function (tab, index) {
-    tab.addEventListener("click", function () {
+    tab.addEventListener("click", function (event) {
+      if (event.target.closest("a")) return;
       select(tab);
     });
 
     tab.addEventListener("keydown", function (event) {
+      if (event.target.closest("a")) return;
       var key = event.key;
       if (key === "Enter" || key === " ") {
         event.preventDefault();

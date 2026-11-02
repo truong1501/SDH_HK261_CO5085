@@ -1,0 +1,3 @@
+exp,tokenizer,attn_impl,num_tokens,num_params,best_epoch,best_val_acc,test_acc,test_macro_f1,train_time_sec,avg_epoch_sec,test_infer_imgs_per_sec
+patch4_scratch,patch4,scratch,49,139018,28,0.88,0.885,0.8842371380868499,258.16534066200256,8.605511355400086,8909.010001200102
+patch4_torch,patch4,torch,49,139018,28,0.8832,0.8854,0.8840170311255173,267.12190198898315,8.904063399632772,8801.836625913382
