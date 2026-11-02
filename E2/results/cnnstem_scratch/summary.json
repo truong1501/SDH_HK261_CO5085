@@ -1,0 +1,22 @@
+{
+  "exp": "cnnstem_scratch",
+  "tokenizer": "cnnstem",
+  "attn_impl": "scratch",
+  "dim": 64,
+  "depth": 4,
+  "num_heads": 4,
+  "mlp_ratio": 2,
+  "dropout": 0.1,
+  "num_tokens": 49,
+  "seed": 42,
+  "epochs": 30,
+  "batch_size": 128,
+  "lr": 0.001,
+  "weight_decay": 0.05,
+  "subset": null,
+  "device": "cuda",
+  "num_params": 156938,
+  "best_val_acc": 0.9246,
+  "train_time_sec": 260.00071930885315,
+  "avg_epoch_sec": 8.666690643628439
+}
