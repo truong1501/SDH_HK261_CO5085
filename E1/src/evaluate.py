@@ -131,7 +131,7 @@ def plot_misclassified(
     for ax in axes[len(chosen):]:
         ax.axis("off")
 
-    fig.suptitle(f"Mau du doan sai — {model_name}", fontsize=10)
+    fig.suptitle(f"Mẫu dự đoán sai, model {model_name}", fontsize=10)
     fig.tight_layout(h_pad=3.0, rect=(0, 0, 1, 0.95))
     fig.savefig(RESULTS_DIR / f"misclassified_{model_name}.png", dpi=150)
     plt.close(fig)

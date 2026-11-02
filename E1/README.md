@@ -1,4 +1,4 @@
-# E1 — Phân loại ảnh: softmax, MLP, CNN
+# E1: Phân loại ảnh, softmax, MLP, CNN
 
 Dataset: **Fashion-MNIST** (28×28 xám, 10 lớp), dùng chung cho E1–E3.
 
@@ -50,12 +50,12 @@ python -m src.evaluate
 
 ## Kết quả sinh ra (`results/`)
 
-- `results/<model>/history.csv`, `summary.json`, `best.pt` — log, cấu hình và checkpoint tốt
+- `results/<model>/history.csv`, `summary.json`, `best.pt`: log, cấu hình và checkpoint tốt
   nhất (theo validation accuracy) của từng model.
-- `results/comparison_table.{csv,json}` — bảng so sánh accuracy, macro-F1, số tham số, thời
-  gian train của cả 3 model (dùng trực tiếp cho báo cáo).
-- `results/loss_accuracy_curves.png` — đường cong loss/accuracy train & val của 3 model.
-- `results/confusion_matrix_<model>.png`, `results/misclassified_<model>.png` — phân tích lỗi.
+- `results/comparison_table.{csv,json}`: bảng so sánh accuracy, macro-F1, số tham số, thời
+  gian train của cả 3 model, dùng trực tiếp cho báo cáo.
+- `results/loss_accuracy_curves.png`: đường cong loss/accuracy train và val của 3 model.
+- `results/confusion_matrix_<model>.png`, `results/misclassified_<model>.png`: phân tích lỗi.
 
 ## Dataset & split
 
