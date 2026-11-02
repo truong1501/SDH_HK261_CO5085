@@ -36,7 +36,7 @@ window.ASSIGNMENT_PANELS = {
       },
     ],
     resources: [
-      ["Báo cáo chung E1–E3", "reports/exercises.pdf"],
+      ["Báo cáo chung E1–E3", "Xem PDF", "reports/exercises.pdf"],
       ["Demo", "Sẽ cập nhật"],
     ],
   },
@@ -76,8 +76,8 @@ window.ASSIGNMENT_PANELS = {
       },
     ],
     resources: [
-      ["A2.1 · Chủ đề", "Phân đoạn ngữ nghĩa, Pascal VOC 2012 (A2/README.md)"],
-      ["Paper", "DeepLabv3, arXiv:1706.05587"],
+      ["A2.1 · Chủ đề", "Phân đoạn ngữ nghĩa, Pascal VOC 2012", "https://github.com/truong1501/SDH_HK261_CO5085/blob/main/A2/README.md"],
+      ["Paper", "DeepLabv3", "https://arxiv.org/abs/1706.05587"],
     ],
   },
 };
