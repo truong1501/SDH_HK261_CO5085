@@ -17,7 +17,7 @@ Trang tổng hợp liên kết tới mã nguồn, báo cáo và các sản phẩ
 
 | Bài | Nội dung | Repository | Báo cáo |
 | --- | --- | --- | --- |
-| E1–E3 | Softmax, MLP, CNN; MSA và tokenization; LSTM/GRU | [Repository](https://github.com/truong1501/SDH_HK261_CO5085) | [Báo cáo E1–E3](reports/exercises.pdf) |
+| E1–E3 | Softmax, MLP, CNN; MSA và tokenization; LSTM/GRU | [Repository](https://github.com/truong1501/SDH_HK261_CO5085) | [Báo cáo E1–E3](reports/E1-E3.pdf) |
 | A1 | So sánh CNN và Transformer trên tập ảnh lớn | Sẽ cập nhật | Sẽ cập nhật |
 | A2 | Phân đoạn ngữ nghĩa trên Pascal VOC 2012; phân tích paper DeepLabv3 | [A2](A2/README.md) | [A2.1](A2/README.md) |
 
@@ -47,4 +47,4 @@ Các mốc dưới đây thuộc năm **2026**. Hạn nộp lúc **23:59, giờ 
 
 - [Mã nguồn và hướng dẫn E1](E1/README.md).
 - [Mã nguồn và hướng dẫn E2](E2/README.md).
-- [Báo cáo E1–E3](reports/exercises.pdf).
+- [Báo cáo E1–E3](reports/E1-E3.pdf).
