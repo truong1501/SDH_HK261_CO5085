@@ -17,7 +17,7 @@ Trang tổng hợp liên kết tới mã nguồn, báo cáo và các sản phẩ
 
 | Bài | Nội dung | Repository | Báo cáo |
 | --- | --- | --- | --- |
-| E1–E3 | Softmax, MLP, CNN; MSA và tokenization; LSTM/GRU | Sẽ cập nhật | Sẽ cập nhật |
+| E1–E3 | Softmax, MLP, CNN; MSA và tokenization; LSTM/GRU | [Repository](https://github.com/truong1501/SDH_HK261_CO5085) | [Báo cáo E1–E3](reports/exercises.pdf) |
 | A1 | So sánh CNN và Transformer trên tập ảnh lớn | Sẽ cập nhật | Sẽ cập nhật |
 | A2 | Chủ đề thị giác máy tính tự chọn và phân tích paper | Sẽ cập nhật | Sẽ cập nhật |
 
@@ -42,3 +42,9 @@ Các mốc dưới đây thuộc năm **2026**. Hạn nộp lúc **23:59, giờ 
 - [Trang GitHub Pages](https://truong1501.github.io/SDH_HK261_CO5085/)
 - [Repository trang học phần](https://github.com/truong1501/SDH_HK261_CO5085)
 - [Link reports A1.1](https://truong1501.github.io/SDH_HK261_CO5085/reports/A1.1_Dataset-Protocol.pdf)
+
+## Kết quả bài tập E1–E2
+
+- [Mã nguồn và hướng dẫn E1](E1/README.md).
+- [Mã nguồn và hướng dẫn E2](E2/README.md).
+- [Báo cáo E1–E3](reports/exercises.pdf).
