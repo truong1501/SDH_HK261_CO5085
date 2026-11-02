@@ -10,6 +10,7 @@
 \usepackage{caption}
 \usepackage{longtable}
 \usepackage{hyperref}
+\usepackage{xurl}
 \usepackage{xcolor}
 \usepackage{float}
 
@@ -24,7 +25,7 @@
   citecolor=black,
 }
 
-\graphicspath{{../E1/results/}}
+\graphicspath{{../E1/results/}{../E2/results/}{../E2/results/eda/}}
 
 \title{\textbf{Báo cáo bài tập E1--E3}\\[0.3em]
 \large Học sâu và ứng dụng trong thị giác máy tính\\
@@ -48,6 +49,11 @@ Trần Lê Hoàng Long (2570443)
 \end{tabular}
 \end{center}
 
+\vspace{0.5cm}
+\begin{center}
+Bản này gồm E1 và E2. E3 sẽ được bổ sung vào cùng file ở hạn nộp tiếp theo.
+\end{center}
+
 \clearpage
 \tableofcontents
 \clearpage
@@ -56,9 +62,30 @@ Trần Lê Hoàng Long (2570443)
 
 \subsection{Tập dữ liệu: Fashion-MNIST}
 
-Cả ba bài E1, E2, E3 dùng chung một tập ảnh nhỏ là Fashion-MNIST: ảnh xám
-$28 \times 28$, 10 lớp trang phục (T-shirt/top, Trouser, Pullover, Dress, Coat,
-Sandal, Shirt, Sneaker, Bag, Ankle boot), mỗi lớp cân bằng số lượng ảnh.
+Cả ba bài E1, E2, E3 dùng chung một tập ảnh nhỏ là Fashion-MNIST [1]: ảnh xám
+$28 \times 28$, 10 lớp trang phục, mỗi lớp cân bằng số lượng ảnh, gồm 60.000
+ảnh train và 10.000 ảnh test.
+
+\begin{table}[H]
+\centering
+\caption{Mười lớp của Fashion-MNIST}
+\begin{tabular}{clc}
+\toprule
+ID & Nhãn & Diễn giải \\
+\midrule
+0 & T-shirt/top & Áo thun \\
+1 & Trouser & Quần dài \\
+2 & Pullover & Áo chui đầu \\
+3 & Dress & Váy liền \\
+4 & Coat & Áo khoác \\
+5 & Sandal & Dép xăng đan \\
+6 & Shirt & Áo sơ mi \\
+7 & Sneaker & Giày thể thao \\
+8 & Bag & Túi \\
+9 & Ankle boot & Bốt cổ thấp \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Nhóm chọn Fashion-MNIST thay vì MNIST vì MNIST quá dễ, cả ba kiến trúc
 softmax/MLP/CNN thường đạt accuracy rất cao và gần nhau (trên 97\%), khó thấy
@@ -95,6 +122,21 @@ Chỉ số ảnh của từng split được sinh bằng một hàm chia stratif
 lưu lại trong thư mục \texttt{E1/splits/} của repository để mọi thành viên
 trong nhóm và mọi bài E1--E3 dùng chung đúng một split, tái lập được.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{class_distribution.png}
+\caption{Số ảnh mỗi lớp theo ba split. Các lớp có số ảnh bằng nhau, nên
+accuracy không bị lệch về một lớp đông ảnh}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=0.78\textheight,keepaspectratio]{samples_by_class.png}
+\caption{Năm ảnh train đầu tiên của mỗi lớp. Ở độ phân giải này, các lớp áo
+(T-shirt/top, Pullover, Coat, Shirt) có đường viền khá giống nhau; mục 2.5 và
+3.7 đối chiếu nhận xét này với confusion matrix}
+\end{figure}
+
 \subsection{Tiền xử lý và augmentation}
 
 Ảnh được chuẩn hóa theo mean/std tính trên tập train của Fashion-MNIST
@@ -114,6 +156,30 @@ thực hiện là: tính logits qua mô hình (forward), tính loss bằng
 log-likelihood), gọi \texttt{loss.backward()} để lan truyền ngược rồi gọi
 \texttt{optimizer.step()} để cập nhật trọng số. Vòng lặp này dùng chung cho cả
 ba mô hình của E1, chỉ khác nhau ở kiến trúc được truyền vào.
+
+\subsection{Cách đánh giá và môi trường}
+
+Mỗi mô hình lấy checkpoint có validation accuracy cao nhất, rồi đánh giá một
+lần trên test. Macro-F1 là trung bình F1 của mười lớp. Mỗi cấu hình chỉ chạy
+một lần với seed 42, nên các chênh lệch nhỏ chưa đủ để kết luận chắc chắn
+(xem mục 2.7 và 3.6).
+
+\begin{table}[H]
+\centering
+\caption{Môi trường chạy của E1 và E2}
+\begin{tabular}{lll}
+\toprule
+Mục & E1 & E2 \\
+\midrule
+Nền tảng & Google Colab & Google Colab \\
+GPU & NVIDIA Tesla T4 & NVIDIA A100-SXM4-40GB \\
+PyTorch & 2.11.0+cu130 & 2.11.0+cu130 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Hai bài chạy trên GPU khác nhau, nên thời gian huấn luyện của E1 và E2 không
+so trực tiếp được với nhau; chỉ so sánh thời gian trong nội bộ từng bài.
 
 \clearpage
 \section{E1: Phân loại ảnh với softmax, MLP và CNN}
@@ -147,6 +213,32 @@ $(784{\times}256{+}256) + (256{\times}128{+}128) + (128{\times}10{+}10) =
 ReLU → MaxPool2 → Flatten → Linear(3136, 128) → ReLU → Dropout(0,3) →
 Linear(128, 10)}. Ảnh giảm kích thước từ $28{\times}28$ xuống $7{\times}7$ sau
 hai lần pooling, với 64 kênh đặc trưng ở tầng cuối. Tổng số tham số: 421.834.
+
+Bảng~\ref{tab:cnn-shapes} liệt kê kích thước tensor qua từng bước của CNN, với
+$B$ là số ảnh trong batch, để thấy rõ ảnh bị thu nhỏ không gian ($28{\times}28
+\to 14{\times}14 \to 7{\times}7$) trong khi số kênh tăng lên ($1 \to 32 \to
+64$), đúng mẫu hình chung của CNN là đánh đổi độ phân giải không gian lấy độ
+sâu đặc trưng.
+
+\begin{table}[H]
+\centering
+\caption{Kích thước tensor của CNN qua từng bước}
+\label{tab:cnn-shapes}
+\begin{tabular}{ll}
+\toprule
+Bước & Kích thước \\
+\midrule
+Ảnh đầu vào & $B \times 1 \times 28 \times 28$ \\
+Sau Conv2d(1, 32, 3) + BN + ReLU & $B \times 32 \times 28 \times 28$ \\
+Sau MaxPool2 & $B \times 32 \times 14 \times 14$ \\
+Sau Conv2d(32, 64, 3) + BN + ReLU & $B \times 64 \times 14 \times 14$ \\
+Sau MaxPool2 & $B \times 64 \times 7 \times 7$ \\
+Sau Flatten & $B \times 3.136$ \\
+Sau Linear(3136, 128) + ReLU + Dropout & $B \times 128$ \\
+Logits (Linear(128, 10)) & $B \times 10$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
 \centering
@@ -208,7 +300,9 @@ CNN & 421.834 & 0,9176 & 0,9145 & 0,9139 & 236,2 \\
 
 Accuracy tăng dần đều theo capacity và độ phức tạp kiến trúc: softmax đạt
 79,05\%, MLP đạt 87,39\% (tăng 8,3 điểm phần trăm so với softmax), CNN đạt
-91,45\% (tăng thêm 4,1 điểm phần trăm so với MLP). CNN vừa chính xác nhất vừa
+91,45\% (tăng thêm 4,1 điểm phần trăm so với MLP). Tính theo số ảnh tuyệt đối
+trên 10.000 ảnh test, softmax đúng 7.905 và sai 2.095 ảnh, MLP đúng 8.739 và
+sai 1.261 ảnh, CNN đúng 9.145 và sai 855 ảnh. CNN vừa chính xác nhất vừa
 huấn luyện nhanh nhất trong ba mô hình, dù chạy ít epoch hơn vẫn hội tụ tốt
 hơn. Điều này cho thấy inductive bias không gian của convolution giúp mô hình
 học hiệu quả hơn trên dữ liệu ảnh, thay vì chỉ tăng số tham số như MLP.
@@ -271,6 +365,15 @@ CNN nhưng đã tốt hơn MLP, lỗi còn lại chủ yếu vẫn rơi vào đ�
 T-shirt/top, Pullover, Coat.
 \end{itemize}
 
+Ngược với Shirt, lớp dễ nhất cũng khác nhau giữa ba mô hình: Ankle boot đạt
+recall cao nhất với softmax (946/1.000, 94,6\%), Bag và Trouser cùng cao nhất
+với MLP (977/1.000, 97,7\% mỗi lớp), còn Sneaker cao nhất với CNN (987/1.000,
+98,7\%). Khoảng cách giữa lớp dễ nhất và lớp khó nhất (Shirt) thu hẹp dần theo
+capacity: từ 53,7 điểm phần trăm ở softmax (94,6\% so với 40,9\%) xuống còn
+29,1 điểm ở CNN (98,7\% so với 69,6\%), cho thấy phần lớn chênh lệch accuracy
+giữa ba mô hình đến từ việc xử lý tốt hơn đúng cụm lớp khó, chứ không phải cải
+thiện đều trên mọi lớp.
+
 Chiều ngược lại cũng xảy ra: T-shirt/top hay bị cả ba mô hình dự đoán nhầm
 thành Shirt (100 ảnh ở softmax, 143 ảnh ở MLP, 81 ảnh ở CNN), và Pullover hay
 bị nhầm thành Coat. Điều này cho thấy ranh giới quyết định giữa bốn lớp áo
@@ -319,16 +422,360 @@ của nó phù hợp tự nhiên với dữ liệu ảnh. Cả ba mô hình đ�
 nhau ở cùng một cụm lớp trang phục phần thân trên, cho thấy giới hạn này đến
 từ chính dữ liệu chứ không phải từ một kiến trúc cụ thể nào.
 
+\subsection{Hạn chế}
+
+Hai điểm sau cần lưu ý khi đọc kết quả của E1. Thứ nhất, mỗi mô hình chỉ chạy
+một lần với một seed (42), nên chênh lệch nhỏ như 4,1 điểm phần trăm giữa CNN
+và MLP là thật, nhưng chênh lệch còn nhỏ hơn giữa các lớp dễ (ví dụ 97,7\% so
+với 98,7\% giữa MLP và CNN ở lớp dễ nhất) nằm trong khoảng có thể dao động nếu
+đổi seed; cần chạy nhiều seed và báo cáo mean cùng độ lệch chuẩn để kết luận
+chắc chắn hơn. Thứ hai, số epoch khác nhau giữa CNN (15) và softmax/MLP (20)
+được chọn theo lúc mỗi mô hình hội tụ trên validation, không phải một ngân
+sách epoch cố định cho cả ba; vì vậy nhận xét “CNN hội tụ nhanh hơn” chỉ đúng
+theo nghĩa cần ít epoch hơn để đạt validation accuracy tốt nhất của chính nó,
+chứ chưa phải một phép so sánh tốc độ hội tụ được kiểm soát chặt chẽ giữa ba
+kiến trúc.
+
 \clearpage
 \section{E2: Transformer, MSA và tokenization}
 
-Phần này sẽ được bổ sung trong lần cập nhật tiếp theo của báo cáo, cùng hạn
-nộp với E1 (02/11/2026).
+\subsection{Mục tiêu và phạm vi}
+
+Bài E2 phân loại Fashion-MNIST bằng một bộ mã hóa Transformer nhỏ, không dùng
+mô hình pretrained. Báo cáo trả lời hai câu hỏi: (i) MSA tự viết và MSA của
+PyTorch khác nhau thế nào khi cùng dùng patch $4{\times}4$; (ii) cách biến ảnh
+thành chuỗi token ảnh hưởng ra sao khi cùng dùng MSA tự viết. Đề yêu cầu ít
+nhất hai cách lấy token; nhóm cài đặt bốn cách, tổng cộng năm thí nghiệm.
+
+Trong MSA, mỗi token tổng hợp thông tin từ các token khác theo trọng số tính
+từ chính đầu vào. Ở bài này, token là vector mô tả một ô ảnh, một hàng ảnh
+hoặc một vị trí trên feature map. Cách dùng chuỗi patch lấy ý tưởng từ ViT
+[3], với mô hình nhỏ hơn nhiều.
+
+\subsection{Kiến trúc và công thức}
+
+Ảnh đầu vào có dạng $(B, 1, 28, 28)$, với $B$ là số ảnh trong batch. Tokenizer
+tạo $(B, N, 64)$. Mô hình thêm một vector CLS học được vào đầu chuỗi và cộng
+vector vị trí học được, nên độ dài đi vào attention là $S = N + 1$.
+
+Mô hình có bốn khối encoder dạng pre-norm:
+\begin{align*}
+u &= z + \text{MSA}(\text{LayerNorm}(z)) \\
+z_{\text{next}} &= u + \text{FFN}(\text{LayerNorm}(u)) \\
+\text{FFN}(x) &= \text{Linear}_2(\text{Dropout}(\text{GELU}(\text{Linear}_1(x))))
+\end{align*}
+
+FFN đổi chiều $64 \to 128 \to 64$ trên từng token, còn MSA trao đổi thông tin
+giữa các token. Cuối encoder, token CLS đi qua LayerNorm và Linear $64 \to 10$
+để tạo logits. \texttt{CrossEntropyLoss} nhận logits trực tiếp.
+
+Trong mỗi head, với chiều head $d = 64/4 = 16$ [2]:
+\begin{align*}
+Q = XW_Q + b_Q&, \quad K = XW_K + b_K, \quad V = XW_V + b_V \\
+A &= \text{softmax}(QK^\top / \sqrt{d}) \\
+\text{head} &= AV \\
+\text{MSA}(X) &= \text{concat}(\text{head}_1, \ldots, \text{head}_4)W_O + b_O
+\end{align*}
+
+\texttt{ScratchMSA} gộp ba phép chiếu thành một \texttt{Linear(64, 192)}, tách
+Q/K/V thành bốn head, rồi dùng \texttt{einsum} để tính điểm và tổng có trọng
+số; bản này không gọi \texttt{nn.MultiheadAttention} hay
+\texttt{nn.TransformerEncoder}. \texttt{TorchMSA} gọi
+\texttt{nn.MultiheadAttention} với \texttt{batch\_first=True}, truyền cùng $x$
+cho query, key, value [4].
+
+\begin{table}[H]
+\centering
+\caption{Kích thước tensor với patch4 ($N=49$, $S=50$)}
+\begin{tabular}{ll}
+\toprule
+Đại lượng & Kích thước \\
+\midrule
+Ảnh & $B \times 1 \times 28 \times 28$ \\
+Patch đã trải phẳng & $B \times 49 \times 16$ \\
+Token sau Linear & $B \times 49 \times 64$ \\
+Chuỗi sau thêm CLS & $B \times 50 \times 64$ \\
+Mỗi Q, K, V sau tách head & $B \times 4 \times 50 \times 16$ \\
+Điểm / trọng số attention & $B \times 4 \times 50 \times 50$ \\
+Kết quả ghép head & $B \times 50 \times 64$ \\
+Logits phân loại & $B \times 10$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Bốn cách lấy token}
+
+\begin{table}[H]
+\centering
+\caption{Bốn cách biến ảnh thành chuỗi token}
+\label{tab:tokenizers}
+\begin{tabular}{llcc}
+\toprule
+Cách & Phần ảnh trước phép chiếu & $N$ & $S^2$ mỗi head \\
+\midrule
+\texttt{patch4} & Ô $4{\times}4$, stride 4 & 49 & 2.500 \\
+\texttt{patch7s3} & Ô $7{\times}7$, stride 3 (chồng lấn) & 64 & 4.225 \\
+\texttt{row} & Một hàng gồm 28 pixel & 28 & 841 \\
+\texttt{cnnstem} & Một vị trí trong feature map $7{\times}7$ & 49 & 2.500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Với patch, số ô theo một chiều là $\lfloor(28-p)/s\rfloor + 1$, không padding.
+\texttt{patch4} cho lưới $7{\times}7$. \texttt{patch7s3} cho lưới $8{\times}8$
+với các ô chồng lấn. \texttt{row} chiếu mỗi hàng $28 \to 64$, ít cặp attention
+nhất nhưng nén toàn bộ thông tin ngang của hàng vào một vector. \texttt{cnnstem}
+gồm Conv $1 \to 32$, BatchNorm, ReLU, MaxPool rồi Conv $32 \to 64$, BatchNorm,
+ReLU, MaxPool; feature map $64{\times}7{\times}7$ được trải thành 49 token. Vì
+có thêm các lớp convolution, thí nghiệm này thay đổi cả số tham số và loại
+phép biến đổi, ngoài cách chia token. Nhóm không dùng token theo từng pixel
+($N=784$) vì chi phí attention tăng theo $N^2$: khoảng 615 nghìn cặp cho mỗi
+ảnh và mỗi head.
+
+\subsection{Thiết kế thí nghiệm và huấn luyện}
+
+\begin{table}[H]
+\centering
+\caption{Cấu hình dùng chung cho năm thí nghiệm}
+\begin{tabular}{ll}
+\toprule
+Thuộc tính & Giá trị \\
+\midrule
+Chiều token / số khối / số head & 64 / 4 / 4 \\
+FFN / dropout & $64 \to 128 \to 64$ / 0,1 \\
+Optimizer & AdamW \\
+Learning rate cơ sở / weight decay & 0,001 / 0,05 \\
+Epoch / batch / seed & 30 / 128 / 42 \\
+Lịch learning rate & Warmup 2 epoch rồi cosine theo từng batch \\
+Dữ liệu & Train 55.000, validation 5.000, test 10.000 \\
+Chọn checkpoint & Validation accuracy cao nhất \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Training loop tự viết theo thứ tự forward $\to$ loss $\to$
+\texttt{zero\_grad} $\to$ backward $\to$ \texttt{optimizer.step} $\to$
+\texttt{scheduler.step}. Khi validation, mô hình chuyển sang \texttt{eval} và
+tắt gradient. Mỗi thí nghiệm là một cặp (tokenizer, bản MSA); hai phép so sánh
+theo đề là (i) \texttt{patch4\_scratch} với \texttt{patch4\_torch}, và (ii)
+\texttt{patch4\_scratch}, \texttt{patch7s3\_scratch}, \texttt{row\_scratch},
+\texttt{cnnstem\_scratch} với nhau.
+
+\subsection{Kiểm chứng MSA tự viết}
+
+Nhóm chép trọng số Q/K/V và đầu ra từ \texttt{TorchMSA} sang \texttt{ScratchMSA},
+chuyển cả hai sang \texttt{eval}, cho cùng đầu vào rồi so output, attention
+từng head và gradient theo đầu vào. Ngưỡng đạt là $10^{-5}$ cho output và
+attention, $10^{-4}$ cho gradient; tổng mỗi hàng attention cũng phải bằng 1.
+
+\begin{table}[H]
+\centering
+\caption{Kết quả kiểm chứng MSA (\texttt{msa\_check.json})}
+\begin{tabular}{lccc}
+\toprule
+Cấu hình ($B$, $S$, $D$, số head) & Max sai lệch output & Max sai lệch attention & Gradient đầu vào \\
+\midrule
+8, 50, 64, 4 & 0,0 & 0,0 & 0,0 \\
+8, 29, 32, 8 & 0,0 & 0,0 & 0,0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cả hai cấu hình đều đạt. Phép kiểm tra chạy trên CPU, chế độ eval, không dùng
+dropout hay mask.
+
+\subsection{Kết quả so sánh}
+
+\begin{table}[H]
+\centering
+\caption{Kết quả năm thí nghiệm trên tập test}
+\label{tab:e2-results}
+\begin{tabular}{lrrrr}
+\toprule
+Thí nghiệm & Tham số & Val tốt nhất (\%) & Test (\%) & Macro-F1 (\%) \\
+\midrule
+patch4\_scratch & 139.018 & 88,00 & 88,50 & 88,42 \\
+patch4\_torch & 139.018 & 88,32 & 88,54 & 88,40 \\
+patch7s3\_scratch & 142.090 & 88,82 & 89,54 & 89,48 \\
+row\_scratch & 138.442 & 89,42 & 89,14 & 89,05 \\
+cnnstem\_scratch & 156.938 & 92,46 & 92,25 & 92,22 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{(i) MSA tự viết và PyTorch với cùng patch4.} Hai mô hình có cùng số
+tham số và kết quả gần như nhau: test 88,50\% và 88,54\%, chênh 4 ảnh trên
+10.000. Hai bản cũng khởi tạo khác nhau (\texttt{nn.MultiheadAttention} dùng
+Xavier, bản tự viết dùng mặc định của \texttt{nn.Linear}), nên với một seed,
+chênh lệch này chưa đủ để kết luận bản nào tốt hơn.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{curves_attention.png}
+\caption{Đường cong loss và accuracy của hai bản MSA với patch4}
+\end{figure}
+
+\textbf{(ii) So sánh bốn cách lấy token (cùng MSA tự viết).}
+\texttt{cnnstem} đạt test cao nhất, 92,25\%, hơn \texttt{patch4} 3,75 điểm với
+thêm 17.920 tham số (12,89\%); các lớp convolution giúp mô hình học mẫu cục bộ
+trước attention. \texttt{patch7s3} (patch chồng lấn) đạt 89,54\%, hơn
+\texttt{patch4} 1,04 điểm. \texttt{row} đạt 89,14\% với chỉ 28 token ảnh,
+cũng cao hơn \texttt{patch4} dù có ít token hơn — nhiều token hơn không đi
+kèm accuracy cao hơn trong thí nghiệm này.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{curves_tokenizers.png}
+\caption{Đường cong loss và accuracy của bốn tokenizer với MSA tự viết}
+\end{figure}
+
+Ở epoch cuối, train accuracy và validation accuracy của cả năm mô hình chênh
+dưới 1 điểm, ví dụ \texttt{cnnstem} đạt 92,72\% và 92,46\%. Epoch tốt nhất đều
+từ 27 trở đi; các mô hình chưa có dấu hiệu overfit rõ, nên có thể thử mô hình
+lớn hơn hoặc train lâu hơn.
+
+\subsection{Phân tích lỗi và hình attention}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{confusion_matrix_cnnstem_scratch.png}
+\caption{Confusion matrix của \texttt{cnnstem\_scratch}, mô hình có validation
+accuracy cao nhất}
+\label{fig:cm-cnnstem}
+\end{figure}
+
+Hàng là nhãn thật, cột là dự đoán. Mô hình đúng 9.225 và sai 775 ảnh trên
+10.000. Các ô nhầm lớn nhất là Shirt $\to$ T-shirt/top (96 ảnh), T-shirt/top
+$\to$ Shirt (82 ảnh) và Shirt $\to$ Coat (82 ảnh). Shirt có recall thấp nhất,
+74,40\%, trong khi Bag đạt 98,70\%. Ngoài Shirt, lỗi còn tập trung giữa
+Pullover và Coat. Kết quả này khớp với nhận xét ở mục 1.2 rằng các lớp áo có
+đường viền giống nhau.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{attention_maps.png}
+\caption{Trọng số từ token CLS đến token ảnh ở khối cuối, trung bình các head}
+\end{figure}
+
+Hình này lấy hàng query CLS, bỏ cột CLS, trung bình bốn head rồi nội suy lên
+$28{\times}28$. Vùng nóng khác nhau khá nhiều giữa \texttt{patch4\_scratch} và
+\texttt{patch4\_torch} trên cùng một ảnh, dù hai mô hình có accuracy gần bằng
+nhau. Với \texttt{patch4}, một số vùng nóng nằm ngoài vật thể. Với
+\texttt{cnnstem}, vùng nóng tập trung ở phần giữa vật thể hơn. Hình chỉ cho
+biết CLS đặt trọng số ở đâu, chưa cho biết vùng đó quyết định dự đoán.
+
+\subsection{Kết luận E2}
+
+Nhóm đã cài đặt MSA tự viết, MSA của PyTorch và bốn cách lấy token. MSA tự
+viết khớp với bản PyTorch trong cả hai phép kiểm tra, và accuracy của hai bản
+gần như nhau. \texttt{cnnstem} cho kết quả cao nhất cả trên validation lẫn
+test; \texttt{row} và patch chồng lấn nhỉnh hơn \texttt{patch4}. Lỗi chủ yếu
+nằm ở các lớp áo, nhất là Shirt.
+
+Kết quả dựa trên một seed và một lần chạy cho mỗi cấu hình, các tokenizer
+chưa được cân bằng số tham số, và thời gian chưa được đo riêng cho MSA. Bước
+tiếp theo là lặp lại với nhiều seed và đo riêng thời gian nạp dữ liệu.
+
+\clearpage
+\section{So sánh E1 và E2}
+
+CNN của E1 và \texttt{cnnstem} của E2 có cùng hai khối convolution (19.008
+tham số). Điểm khác là phần phía sau: E1 trải feature map rồi đưa qua các lớp
+Linear, còn E2 coi mỗi vị trí trên feature map là một token và đưa qua bốn
+khối MSA. Vì vậy, \texttt{cnnstem} có thể xem như một cách thay phần phân
+loại của CNN bằng MSA.
+
+\begin{table}[H]
+\centering
+\caption{CNN (E1) so với cnnstem (E2)}
+\begin{tabular}{lrr}
+\toprule
+Chỉ số & CNN (E1) & CNN-stem (E2) \\
+\midrule
+Tổng tham số & 421.834 & 156.938 \\
+Tham số sau phần convolution & 402.826 & 137.930 \\
+Test accuracy (\%) & 91,45 & 92,25 \\
+Macro-F1 (\%) & 91,39 & 92,22 \\
+Số ảnh test sai & 855 & 775 \\
+Recall của Shirt (\%) & 69,60 & 74,40 \\
+Shirt $\to$ T-shirt/top (ảnh) & 117 & 96 \\
+Shirt $\to$ Coat (ảnh) & 97 & 82 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\texttt{cnnstem} đúng thêm 80 ảnh test với số tham số bằng khoảng 37\% của
+CNN. Phần lớn cải thiện về Shirt đến từ việc giảm nhầm sang T-shirt/top và
+Coat, trong khi T-shirt/top $\to$ Shirt gần như không đổi (81 và 82 ảnh).
+Attention cho phép mô hình tổng hợp thông tin giữa các vị trí xa nhau trên
+ảnh, nên nhóm cho rằng đây có thể là một lý do của cải thiện này.
+
+Kết quả này chưa đủ để quy toàn bộ cải thiện cho MSA, vì E2 còn dùng AdamW,
+warmup và cosine, train 30 epoch so với 15 epoch của CNN, và mỗi mô hình mới
+chạy một seed. Để kiểm tra riêng tác động của MSA, cần train hai mô hình với
+cùng optimizer, lịch learning rate và số epoch.
+
+Nếu bỏ convolution, kết quả thấp hơn: ba cách lấy token còn lại đạt 88,50\%
+đến 89,54\%, cao hơn MLP (87,39\%) nhưng thấp hơn CNN (91,45\%). Với tập dữ
+liệu và kích thước mô hình này, MSA cho kết quả tốt nhất khi đi sau các lớp
+convolution, chứ chưa thay thế được convolution.
 
 \clearpage
 \section{E3: LSTM và GRU trên chuỗi ảnh}
 
 Phần này sẽ được bổ sung trong lần cập nhật tiếp theo của báo cáo, đúng hạn
 nộp của E3 (09/11/2026).
+
+\clearpage
+\section*{Phụ lục}
+\addcontentsline{toc}{section}{Phụ lục}
+
+\subsection*{Nguồn số liệu}
+
+\begin{table}[H]
+\centering
+\caption{Vị trí số liệu dùng trong báo cáo, trong repository}
+\begin{tabular}{lp{8.5cm}}
+\toprule
+Nội dung & File trong repo \\
+\midrule
+Split dùng chung & \texttt{E1/splits/train\_idx.npy, val\_idx.npy, split\_meta.json} \\
+Môi trường và output lúc chạy & \texttt{E1/notebooks/E1\_Colab.ipynb, E2/notebooks/E2\_Colab.ipynb} \\
+Kết quả E1 & \texttt{E1/results/comparison\_table.json; E1/results/<model>/history.csv, summary.json} \\
+Cấu hình E2 & \texttt{E2/src/experiments.py} \\
+Đối chiếu MSA & \texttt{E2/results/msa\_check.json} \\
+Kết quả E2 & \texttt{E2/results/comparison\_table.json; E2/results/<tên thí nghiệm>/history.csv, summary.json} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Khai báo hỗ trợ AI}
+
+Nhóm dùng công cụ AI (Claude Code) để hỗ trợ viết code khung cho E1 và E2
+(\texttt{data.py}, \texttt{models.py}, \texttt{train.py}, \texttt{evaluate.py}
+và các file tương ứng của E2 như \texttt{tokenizers.py}, \texttt{attention.py})
+cùng ví dụ sử dụng, và gợi ý các thí nghiệm cần làm. Nhóm sửa đổi, bổ sung
+thêm vào template rồi tự chạy thí nghiệm trên Colab để lấy số liệu. Sau khi
+có kết quả, AI hỗ trợ tổng hợp và viết báo cáo, nhóm đọc và sửa lại sau đó. AI
+cũng hỗ trợ viết test, vẽ sơ đồ, dàn trang PDF và chỉnh README. Nhóm đã đọc,
+hiểu và kiểm tra lại toàn bộ code trước khi chạy, và chịu trách nhiệm về tính
+đúng đắn của số liệu cũng như nội dung phân tích.
+
+\clearpage
+\section*{Tài liệu tham khảo}
+\addcontentsline{toc}{section}{Tài liệu tham khảo}
+
+\begin{enumerate}
+\item[{[1]}] Han Xiao, Kashif Rasul, Roland Vollgraf. \textit{Fashion-MNIST: a
+Novel Image Dataset for Benchmarking Machine Learning Algorithms} (2017).
+\url{https://github.com/zalandoresearch/fashion-mnist}.
+\item[{[2]}] Ashish Vaswani và cộng sự. \textit{Attention Is All You Need}.
+NeurIPS 2017. \url{https://arxiv.org/abs/1706.03762}.
+\item[{[3]}] Alexey Dosovitskiy và cộng sự. \textit{An Image is Worth 16x16
+Words: Transformers for Image Recognition at Scale}. ICLR 2021.
+\url{https://arxiv.org/abs/2010.11929}.
+\item[{[4]}] PyTorch. \textit{MultiheadAttention}, tài liệu chính thức.
+\url{https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html}.
+\end{enumerate}
 
 \end{document}
