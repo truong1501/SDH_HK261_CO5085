@@ -15,21 +15,4 @@ reports/build/
 **/last.pt
 
 # Windows Explorer folder metadata
-[Dd]esktop.ini
-thumbs.db
-A2/papers/*.pdf
-
-# A1: checkpoint và feature cache quá lớn cho git (log, metrics, confusion vẫn commit)
-A1/runs/**/*.pt
-A1/runs/_features/
-A1/runs/*_smoke/
-
-# A2: keep private datasets and large checkpoints out of Git
-A2/data/
-A2/runs/
-A2/checkpoints/
-A2/samples/
-
-# JupyterHub exports can contain large checkpoint archives
-A1/exports/
-A2/exports/
+desktop.ini

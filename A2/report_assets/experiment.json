@@ -1,9 +1,0 @@
-{
-  "model": "timbrooks/instruct-pix2pix",
-  "resolution": 256,
-  "batch": 4,
-  "accumulation": 4,
-  "precision": "bf16",
-  "learning_rate": 1e-05,
-  "seed": 42
-}
