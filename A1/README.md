@@ -46,6 +46,24 @@ Run đã có `metrics.json` sẽ được bỏ qua; run dở sẽ resume từ `l
 
 Chung: AdamW, warmup + cosine, batch 256, bf16 (fp16 nếu GPU không hỗ trợ bf16), trọng số ImageNet-1k từ timm. Checkpoint chọn theo val top-1; test chỉ đánh giá một lần trên checkpoint đó.
 
+## Hình và bảng cho báo cáo
+
+`python -m src.summarize --out_root runs --splits_dir splits --fig_dir figures --data_root <DATA_ROOT>` (cell 6 notebook JupyterHub) sinh:
+
+| File | Dùng cho phần báo cáo |
+|---|---|
+| `figures/mode_compare.png` | Hình chính: top-1/macro-F1 CNN vs ViT theo 4 chế độ, std + từng seed |
+| `figures/curves_by_mode.png` | Train vs val loss/acc từng chế độ, epoch được chọn theo val (overfit/underfit) |
+| `figures/pretrain_gap.png` | Lợi ích pretrain: from-scratch vs pretrained tốt nhất |
+| `figures/tradeoff.png`, `figures/efficiency.png` | Accuracy vs tham số/thời gian; tham số trainable, s/epoch, VRAM, throughput |
+| `figures/agreement.png` + bảng McNemar trong `summary.md` | CNN và ViT đúng/sai trên cùng ảnh; khác biệt có ý nghĩa thống kê không |
+| `figures/per_class.png`, `per_class.csv` | Accuracy từng lớp, lớp CNN/ViT hơn nhau nhiều nhất |
+| `figures/confusion_<model>.png` + top cặp nhầm trong `summary.md` | Phân tích lỗi |
+| `figures/misclassified_<model>.png` | Ảnh test bị đoán sai (cần `--data_root`) |
+| `summary.md`, `summary.tex`, `summary.csv` | Bảng tổng hợp (Markdown / LaTeX booktabs / CSV) |
+
+Run tốt nhất mỗi mô hình được chọn theo validation, không theo test. `figures/eda_*.png` là hình EDA dữ liệu đã có.
+
 ## Ghi chú cài đặt
 
 - **Freeze toàn bộ (R2, R6):** trích feature một lần rồi train head trên feature (protocol mục 9). Vì vậy ảnh train ở chế độ này dùng Resize 256 + CenterCrop 224, không có Crop/Flip ngẫu nhiên như bảng augmentation ở mục 4 của protocol. Cần nêu điểm này trong báo cáo.

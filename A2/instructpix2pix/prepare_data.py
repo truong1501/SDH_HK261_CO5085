@@ -22,12 +22,12 @@ def split_groups(keys, seed=42):
     return {name: [i for i, key in enumerate(keys) if key in group] for name, group in sets.items()}
 
 
-def main():
+def main(argv=None):
     from datasets import load_dataset, DatasetDict
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True)
     parser.add_argument("--seed", type=int, default=42)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     output = Path(args.output)
     if output.exists():
         parser.error("Output already exists; reuse it or choose another path")

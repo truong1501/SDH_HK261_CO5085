@@ -6,14 +6,10 @@ import time
 from pathlib import Path
 
 
-def main():
-    import numpy as np
-    import torch
-    from PIL import Image, ImageOps
-    from datasets import load_from_disk
-    from diffusers import StableDiffusionInstructPix2PixPipeline, UNet2DConditionModel
-    from transformers import CLIPModel, CLIPProcessor
+CLIP_ID = "openai/clip-vit-base-patch32"
 
+
+def build_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", required=True)
     parser.add_argument("--model", default="timbrooks/instruct-pix2pix")
@@ -26,28 +22,54 @@ def main():
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--text_guidance", type=float, default=7.5)
     parser.add_argument("--image_guidance", type=float, default=1.5)
-    args = parser.parse_args()
+    return parser
+
+
+def parse_args(argv=None):
+    """argv: list kiểu CLI, ví dụ ["--data", "...", "--output", "..."] (dùng được trong notebook)."""
     import math
+    parser = build_parser()
+    args = parser.parse_args(argv)
     if not all(math.isfinite(x) and x >= 1 for x in (args.text_guidance,args.image_guidance)):
         parser.error("guidance values must be finite and >= 1")
     if args.limit < 1 or args.steps < 1 or args.resolution < 64 or args.resolution % 8:
         parser.error("Positive limit/steps and resolution divisible by 8 (>=64) required")
+    return args
+
+
+def load_models(model="timbrooks/instruct-pix2pix", unet=None):
+    """Nạp pipeline + CLIP một lần; truyền lại vào evaluate() cho nhiều cấu hình guidance."""
+    import torch
+    from diffusers import StableDiffusionInstructPix2PixPipeline, UNet2DConditionModel
+    from transformers import CLIPModel, CLIPProcessor
     if not torch.cuda.is_available():
         raise RuntimeError("Run comparison on a CUDA GPU")
-    output = Path(args.output)
-    if output.exists() and any(output.iterdir()):
-        parser.error("Use a new output directory to preserve comparisons")
-    output.mkdir(parents=True, exist_ok=True)
-    dataset = load_from_disk(args.data)[args.split]
     dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
-    pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(args.model, torch_dtype=dtype)
-    if args.unet:
-        pipe.unet = UNet2DConditionModel.from_pretrained(args.unet, subfolder="unet", torch_dtype=dtype)
+    pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(model, torch_dtype=dtype)
+    if unet:
+        pipe.unet = UNet2DConditionModel.from_pretrained(unet, subfolder="unet", torch_dtype=dtype)
     pipe.to("cuda")
     pipe.set_progress_bar_config(disable=True)
-    clip_id = "openai/clip-vit-base-patch32"
-    clip = CLIPModel.from_pretrained(clip_id).to("cuda").eval()
-    processor = CLIPProcessor.from_pretrained(clip_id)
+    clip = CLIPModel.from_pretrained(CLIP_ID).to("cuda").eval()
+    processor = CLIPProcessor.from_pretrained(CLIP_ID)
+    return pipe, clip, processor
+
+
+def evaluate(args, models=None, dataset=None, verbose=True):
+    """Chạy đánh giá. models=(pipe, clip, processor) từ load_models để tái sử dụng."""
+    import numpy as np
+    import torch
+    from PIL import Image, ImageOps
+    from datasets import load_from_disk
+    output = Path(args.output)
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"Use a new output directory to preserve comparisons: {output}")
+    if models is None:
+        models = load_models(args.model, args.unet)
+    pipe, clip, processor = models
+    output.mkdir(parents=True, exist_ok=True)
+    if dataset is None:
+        dataset = load_from_disk(args.data)[args.split]
     rows = []
     with torch.inference_mode():
         for i in range(min(args.limit, len(dataset))):
@@ -84,7 +106,13 @@ def main():
                    safety_flagged=sum(r["safety_flagged"] for r in rows),
                    note="Reference similarity proxies; not instruction-following accuracy. Pretrained training overlap is possible.")
     (output/"summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    print(json.dumps(summary, indent=2))
+    if verbose:
+        print(json.dumps(summary, indent=2))
+    return summary
+
+
+def main(argv=None):
+    return evaluate(parse_args(argv))
 
 
 if __name__ == "__main__":
