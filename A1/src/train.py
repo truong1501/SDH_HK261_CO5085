@@ -60,6 +60,13 @@ def feature_cache_key(cfg, args):
     return hashlib.sha256(json.dumps(metadata, sort_keys=True).encode()).hexdigest()[:16]
 
 
+def atomic_save(obj, path):
+    """Ghi ra file tạm rồi os.replace: ngắt kernel giữa lúc lưu không làm hỏng checkpoint cũ."""
+    tmp = f"{path}.tmp"
+    torch.save(obj, tmp)
+    os.replace(tmp, path)
+
+
 def append_history(path, row):
     new = not os.path.exists(path)
     with open(path, "a", newline="") as f:
@@ -95,8 +102,10 @@ def finalize(cfg, model, out_dir, test_logits, test_y, extra, device, amp_dtype,
         "test_top1": m["top1"], "test_top5": m["top5"], "test_macro_f1": m["macro_f1"], "test_loss": m["loss"],
         "throughput_img_s": tput, "notes": cfg.notes, **extra, **env_info(device, amp_dtype),
     }
-    with open(os.path.join(out_dir, "metrics.json"), "w") as f:
+    tmp = os.path.join(out_dir, "metrics.json.tmp")
+    with open(tmp, "w") as f:
         json.dump(metrics, f, indent=2)
+    os.replace(tmp, os.path.join(out_dir, "metrics.json"))
     print(f"[{cfg.run_id} s{cfg.seed}] TEST top1={m['top1']:.4f} top5={m['top5']:.4f} "
           f"macroF1={m['macro_f1']:.4f} | trainable={trainable:,} | {tput:.0f} img/s")
     return metrics
@@ -141,7 +150,7 @@ def get_features(cfg, model, args, device, amp_dtype):
         print(f"  feature {name}: {tuple(out[name][0].shape)}")
     out["extract_time_s"] = time.perf_counter() - t0
     out["extract_peak_mem_gb"] = torch.cuda.max_memory_allocated() / 1e9 if device.type == "cuda" else 0.0
-    torch.save(out, path)
+    atomic_save(out, path)
     return out
 
 
@@ -206,7 +215,7 @@ def run_freeze_all(cfg, args, device, amp_dtype, out_dir):
     head_time = time.perf_counter() - t0
 
     head.load_state_dict(best_state)
-    torch.save(model.state_dict(), os.path.join(out_dir, "best.pt"))
+    atomic_save(model.state_dict(), os.path.join(out_dir, "best.pt"))
     with torch.no_grad():
         test_logits = head_logits(xte).float().cpu()
     extra = {
@@ -298,8 +307,8 @@ def run_standard(cfg, args, device, amp_dtype, out_dir):
         })
         if vm["top1"] > best_acc:
             best_acc, best_epoch = vm["top1"], epoch
-            torch.save(model.state_dict(), best_path)
-        torch.save({
+            atomic_save(model.state_dict(), best_path)
+        atomic_save({
             "model": model.state_dict(), "optimizer": optimizer.state_dict(),
             "scaler": scaler.state_dict() if scaler is not None else None,
             "epoch": epoch, "best_acc": best_acc, "best_epoch": best_epoch,

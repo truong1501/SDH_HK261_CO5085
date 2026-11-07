@@ -4,14 +4,14 @@ Hạn A1.2: thứ Hai **09/11/2026, 23:59 giờ Việt Nam**, theo lịch trong 
 
 ## Trình tự
 
-1. Chọn kernel có CUDA/PyTorch/torchvision đúng với GPU server. Notebook không cài lại CUDA hệ thống.
-2. Đặt `REPO`, `DATA_ROOT`, `OUT` đúng đường dẫn có quyền ghi và giữ được qua các phiên 12 giờ.
-3. Chạy setup và tests, xem dry-run queue.
-4. Chuyển checkpoint R3_s42 nếu muốn resume: `last.pt`, `best.pt`, `config.yaml`, `history.csv`. Chúng nằm trong A1/runs/R3_s42 ở Drive/máy cá nhân; file .pt không có trong Git. Nếu không chuyển, run chưa hoàn tất sẽ train lại từ đầu.
-5. Chạy hàng đợi với `HOURS=11`, để khoảng một giờ cho tổng hợp và tải kết quả. Giới hạn mềm: dừng trước epoch mới nếu thời gian còn ít, không kill giữa lúc ghi checkpoint. Không bảo đảm đủ tất cả run trong 12 giờ; không tự giảm epoch.
-6. Chạy tổng hợp và export. Tải archive kết quả nhỏ từ notebook và đưa lên Drive theo quy định công ty. Checkpoint resume có archive tùy chọn riêng; không commit Git.
+Notebook chạy **trong kernel** (gọi thẳng `src.train.run_one`), không dùng `subprocess`/CLI con.
 
-Food-101 tải trực tiếp bằng torchvision/ETH hoặc dùng tar.gz đã upload qua cơ chế công ty cho phép. Không cần mount Google Drive, không cần token Drive trong notebook. Nếu dữ liệu server không được phép đưa ra ngoài, chỉ mang các metric/biểu đồ được phép; notebook không tự upload dữ liệu lên dịch vụ nào.
+1. Chọn kernel có GPU. Notebook chỉ `%pip install` gói còn thiếu (timm, pyyaml...), không cài lại torch/CUDA.
+2. Cell 1: sửa `DATA_ROOT`, `OUT` nếu cần (A1 tự nhận khi mở notebook trong `A1/notebooks`).
+3. Cell 2 tự chọn `num_workers` theo CPU và `/dev/shm`; nếu shm nhỏ (container 64 MB) sẽ chuyển sharing strategy sang `file_system` để tránh "Bus error"/DataLoader worker chết.
+4. Muốn resume R3_s42 thì chép `last.pt`, `best.pt`, `config.yaml`, `history.csv` vào `OUT/R3_s42/` (file .pt không có trong Git).
+5. Cell 5 train. Dừng bằng Interrupt kernel; checkpoint ghi atomic (file tạm + rename) nên epoch đã lưu không bị hỏng. Chạy lại cell 5 là resume. `HOURS` là giới hạn mềm tại ranh giới epoch.
+6. Cell 6–7 tổng hợp và xuất archive nhỏ; cell 8 (tuỳ chọn) đóng gói checkpoint.
 
 ## Thứ tự hàng đợi
 
