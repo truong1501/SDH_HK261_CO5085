@@ -1,0 +1,10 @@
+# Colab đã có sẵn torch/torchvision; chỉ cần cài timm. Phiên bản thực tế ghi vào metrics.json của từng run.
+torch>=2.2
+torchvision>=0.17
+timm>=1.0,<2
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.4
+matplotlib>=3.8
+pyyaml>=6.0
+tabulate>=0.9
