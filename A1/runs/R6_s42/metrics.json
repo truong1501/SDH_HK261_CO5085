@@ -1,0 +1,31 @@
+{
+  "run_id": "R6",
+  "seed": 42,
+  "model": "deit_s",
+  "mode": "freeze_all",
+  "timm_name": "deit_small_patch16_224.fb_in1k",
+  "params_total": 21704549,
+  "params_trainable": 38885,
+  "test_top1": 0.7268910891089109,
+  "test_top5": 0.9230891089108911,
+  "test_macro_f1": 0.7252661789181709,
+  "test_loss": 0.9958844184875488,
+  "throughput_img_s": 9424.163839174025,
+  "notes": [
+    "freeze_all: train head tr\u00ean feature tr\u00edch 1 l\u1ea7n (\u1ea3nh train d\u00f9ng CenterCrop, kh\u00f4ng augmentation)"
+  ],
+  "epochs_run": 30,
+  "best_epoch": 23,
+  "best_val_top1": 0.6902970297029702,
+  "train_time_s": 100.94305556000018,
+  "extract_time_s": 88.01378163700019,
+  "head_train_time_s": 12.929273922999982,
+  "time_per_epoch_s": 0.43097579743333275,
+  "peak_mem_gb": 0.958578176,
+  "feature_cache": true,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "amp_dtype": "torch.bfloat16",
+  "torch": "2.14.1+cu130",
+  "torchvision": "0.29.1+cu130",
+  "timm": "1.0.31"
+}

@@ -1,0 +1,31 @@
+{
+  "run_id": "R2",
+  "seed": 43,
+  "model": "resnet50",
+  "mode": "freeze_all",
+  "timm_name": "resnet50.a1_in1k",
+  "params_total": 23714981,
+  "params_trainable": 206949,
+  "test_top1": 0.710059405940594,
+  "test_top5": 0.9153663366336634,
+  "test_macro_f1": 0.7080805536568799,
+  "test_loss": 1.09518301486969,
+  "throughput_img_s": 7017.596049172611,
+  "notes": [
+    "freeze_all: train head tr\u00ean feature tr\u00edch 1 l\u1ea7n (\u1ea3nh train d\u00f9ng CenterCrop, kh\u00f4ng augmentation)"
+  ],
+  "epochs_run": 30,
+  "best_epoch": 23,
+  "best_val_top1": 0.6598019801980198,
+  "train_time_s": 110.1980163180001,
+  "extract_time_s": 94.11854390300005,
+  "head_train_time_s": 16.079472415000055,
+  "time_per_epoch_s": 0.5359824138333351,
+  "peak_mem_gb": 2.592237568,
+  "feature_cache": true,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "amp_dtype": "torch.bfloat16",
+  "torch": "2.14.1+cu130",
+  "torchvision": "0.29.1+cu130",
+  "timm": "1.0.31"
+}
