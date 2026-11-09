@@ -1,0 +1,11 @@
+{
+  "model": "lstm",
+  "seq": "row",
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 128,
+  "lr": 0.001,
+  "num_params": 82186,
+  "best_val_acc": 0.8872,
+  "train_time_sec": 309.13020873069763
+}

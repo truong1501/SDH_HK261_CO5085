@@ -1,4 +1,4 @@
-// Dữ liệu cho panel E1-E3. E1 và E2 đã xong, E3 đang triển khai.
+// Dữ liệu cho 3 panel riêng biệt E1, E2, E3 (xem e1-plan.js, e2-plan.js, e3-plan.js). Cả ba bài đã xong.
 window.E1_RESULTS = {
   code: "E1",
   label: "BÀI TẬP",
@@ -47,6 +47,7 @@ window.E2_RESULTS = {
   code: "E2",
   label: "BÀI TẬP",
   deadline: "02/11/2026",
+  pdf: "reports/E1-E3.pdf",
   repoUrl: "https://github.com/truong1501/SDH_HK261_CO5085/tree/main/E2",
   title: "Transformer: MSA tự viết và 4 cách tokenize",
   lead: "Hiện thực Multi-Head Self-Attention (MSA) từ đầu và bằng nn.MultiheadAttention của PyTorch để đối chiếu, rồi thử bốn cách biến ảnh Fashion-MNIST thành chuỗi token đưa vào cùng một encoder Transformer nông (4 khối, 4 head, chiều 64).",
@@ -88,6 +89,44 @@ window.E2_RESULTS = {
     "Attention map",
     "Đường cong loss/accuracy",
   ],
-  pending:
-    "E3 (LSTM, GRU trên chuỗi ảnh) dùng chung dataset này và đang triển khai, hạn nộp 09/11/2026.",
+};
+
+window.E3_RESULTS = {
+  code: "E3",
+  label: "BÀI TẬP",
+  deadline: "09/11/2026",
+  pdf: "reports/E1-E3.pdf",
+  repoUrl: "https://github.com/truong1501/SDH_HK261_CO5085/tree/main/E3",
+  title: "LSTM và GRU trên chuỗi ảnh",
+  lead: "Mô hình hóa ảnh Fashion-MNIST như dữ liệu chuỗi: thử hai cách biến ảnh thành chuỗi (theo hàng, theo patch 4x4) cho cả LSTM và GRU, rồi so với baseline không hồi quy MLP/CNN đã có từ E1, trên cùng split.",
+  checklist: [
+    "LSTM và GRU, mỗi kiến trúc chạy trên 2 cách biến chuỗi (theo hàng, theo patch)",
+    "Baseline MLP/CNN đánh giá lại từ checkpoint E1, không train lại",
+    "So sánh: test accuracy, số tham số, thời gian train",
+  ],
+  stats: [
+    { value: "88,95%", unit: "GRU · theo hàng", note: "Test accuracy cao nhất trong 4 cấu hình, vượt MLP" },
+    { value: "86,75%", unit: "GRU · patch", note: "Cấu hình yếu nhất, thấp hơn cả MLP" },
+    { value: "25%", unit: "GRU nhẹ hơn LSTM", note: "Cùng hidden size, ít tham số hơn nhờ 3 cổng thay vì 4" },
+    { value: "91,45%", unit: "CNN (E1)", note: "Không cấu hình LSTM/GRU nào vượt qua được" },
+  ],
+  models: [
+    { name: "LSTM", attn: "theo hàng", params: "82.186", testAcc: "88,55%", time: "5,2 phút" },
+    { name: "GRU", attn: "theo hàng", params: "61.962", testAcc: "88,95%", time: "4,9 phút" },
+    { name: "LSTM", attn: "patch 4x4", params: "76.042", testAcc: "86,89%", time: "4,9 phút" },
+    { name: "GRU", attn: "patch 4x4", params: "57.354", testAcc: "86,75%", time: "4,9 phút" },
+  ],
+  errorNote:
+    "Theo hàng luôn tốt hơn patch ở cả hai kiến trúc (chênh 1,66 đến 2,20 điểm phần trăm), vì mỗi bước của chuỗi theo hàng có ngữ cảnh một hàng đầy đủ (28 chiều), còn mỗi bước của patch chỉ có một ô cục bộ (16 chiều) nên mô hình phải tự ghép nối ngữ cảnh không gian qua nhiều bước hồi quy hơn. LSTM và GRU không đồng nhất: GRU tốt hơn ở chuỗi theo hàng, LSTM nhỉnh hơn một chút ở patch, chênh lệch nhỏ và chỉ chạy một seed nên chưa đủ để kết luận kiến trúc nào luôn tốt hơn. Hai cấu hình theo hàng vượt MLP (87,39%) dù ít tham số hơn nhiều lần, nhưng không cấu hình nào vượt CNN (91,45%): hồi quy tuần tự một chiều tích lũy ngữ cảnh tốt hơn MLP phẳng, nhưng chưa thay được inductive bias không gian hai chiều của convolution.",
+  setup: [
+    "Adam, learning rate 1e-3",
+    "Batch size 128, seed 42, 20 epoch",
+    "Google Colab · GPU Tesla T4",
+  ],
+  metrics: [
+    "Test accuracy",
+    "Số tham số",
+    "Thời gian train",
+    "Đường cong loss/accuracy",
+  ],
 };

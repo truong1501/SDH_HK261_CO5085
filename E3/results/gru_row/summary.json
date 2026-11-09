@@ -1,0 +1,11 @@
+{
+  "model": "gru",
+  "seq": "row",
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 128,
+  "lr": 0.001,
+  "num_params": 61962,
+  "best_val_acc": 0.8936,
+  "train_time_sec": 296.26452827453613
+}
