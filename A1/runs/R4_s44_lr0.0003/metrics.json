@@ -1,0 +1,29 @@
+{
+  "run_id": "R4",
+  "seed": 44,
+  "model": "resnet50",
+  "mode": "full",
+  "timm_name": "resnet50.a1_in1k",
+  "params_total": 23714981,
+  "params_trainable": 23714981,
+  "test_top1": 0.8563564356435643,
+  "test_top5": 0.9711683168316831,
+  "test_macro_f1": 0.8554444354308355,
+  "test_loss": 0.5084525346755981,
+  "throughput_img_s": 6286.29047406676,
+  "notes": [
+    "lr_backbone override: 0.0001 -> 0.0003"
+  ],
+  "epochs_run": 15,
+  "best_epoch": 13,
+  "best_val_top1": 0.8106930693069307,
+  "train_time_s": 1031.0313892730082,
+  "time_per_epoch_s": 68.73542595153388,
+  "peak_mem_gb": 11.824621056,
+  "feature_cache": false,
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "amp_dtype": "torch.bfloat16",
+  "torch": "2.14.1+cu130",
+  "torchvision": "0.29.1+cu130",
+  "timm": "1.0.31"
+}

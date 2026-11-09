@@ -1,0 +1,21 @@
+run_id: R2
+seed: 44
+model_key: resnet50
+timm_name: resnet50.a1_in1k
+mode:
+  name: freeze_all
+  pretrained: true
+  freeze: all
+  epochs: 30
+  lr_backbone: null
+  lr_head: 0.001
+  warmup_epochs: 0
+  weight_decay: 0.0
+  drop_path: 0.0
+  aug: light
+  mixup: false
+batch_size: 256
+img_size: 224
+num_classes: 101
+smoke: false
+notes: []

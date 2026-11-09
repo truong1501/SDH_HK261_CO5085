@@ -1,0 +1,22 @@
+run_id: R4
+seed: 42
+model_key: resnet50
+timm_name: resnet50.a1_in1k
+mode:
+  name: full
+  pretrained: true
+  freeze: none
+  epochs: 15
+  lr_backbone: 0.0003
+  lr_head: 0.001
+  warmup_epochs: 2
+  weight_decay: 0.05
+  drop_path: 0.1
+  aug: medium
+  mixup: false
+batch_size: 256
+img_size: 224
+num_classes: 101
+smoke: false
+notes:
+- 'lr_backbone override: 0.0001 -> 0.0003'
