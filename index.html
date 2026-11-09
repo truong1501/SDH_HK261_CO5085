@@ -185,7 +185,7 @@
               <dl class="resource-list">
                 <div>
                   <dt>Báo cáo chung E1–E3</dt>
-                  <dd class="is-link"><a href="reports/E1-E3.pdf">E1, E2 · Xem PDF</a></dd>
+                  <dd class="is-link"><a href="reports/E1-E3.pdf">E1, E2, E3 · Xem PDF</a></dd>
                 </div>
                 <div>
                   <dt>Demo</dt>
@@ -263,15 +263,76 @@
               role="tabpanel"
               aria-labelledby="e1-e3"
               tabindex="0"
-              data-plan="e1"
             >
               <noscript
                 ><p class="plan-fallback">
-                  E1, E2 · Fashion-MNIST, softmax/MLP/CNN và Transformer (MSA).
-                  CNN-stem đạt 92,25% test accuracy, cao nhất. Xem
+                  E1, E2, E3 · Fashion-MNIST, softmax/MLP/CNN, Transformer
+                  (MSA) và LSTM/GRU trên chuỗi ảnh. CNN-stem đạt 92,25% test
+                  accuracy, cao nhất. Xem
                   <a href="reports/E1-E3.pdf">báo cáo PDF</a>.
                 </p></noscript
               >
+              <div
+                class="subtab-nav"
+                role="tablist"
+                aria-label="Chọn E1, E2 hoặc E3"
+                data-subtabs
+              >
+                <button
+                  type="button"
+                  class="subtab-btn is-active"
+                  id="subtab-e1"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="subpanel-e1"
+                >
+                  E1 · Softmax, MLP, CNN
+                </button>
+                <button
+                  type="button"
+                  class="subtab-btn"
+                  id="subtab-e2"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="subpanel-e2"
+                  tabindex="-1"
+                >
+                  E2 · Transformer
+                </button>
+                <button
+                  type="button"
+                  class="subtab-btn"
+                  id="subtab-e3"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="subpanel-e3"
+                  tabindex="-1"
+                >
+                  E3 · LSTM/GRU
+                </button>
+              </div>
+              <div class="subtab-panels">
+                <div
+                  id="subpanel-e1"
+                  role="tabpanel"
+                  aria-labelledby="subtab-e1"
+                  data-plan="e1"
+                ></div>
+                <div
+                  id="subpanel-e2"
+                  role="tabpanel"
+                  aria-labelledby="subtab-e2"
+                  data-plan="e2"
+                  hidden
+                ></div>
+                <div
+                  id="subpanel-e3"
+                  role="tabpanel"
+                  aria-labelledby="subtab-e3"
+                  data-plan="e3"
+                  hidden
+                ></div>
+              </div>
             </section>
             <section
               class="plan-panel assignment-panel"
@@ -398,6 +459,9 @@
     <script src="assets/js/a1-plan.js" defer></script>
     <script src="assets/js/e1-plan.data.js" defer></script>
     <script src="assets/js/e1-plan.js" defer></script>
+    <script src="assets/js/e2-plan.js" defer></script>
+    <script src="assets/js/e3-plan.js" defer></script>
+    <script src="assets/js/exercise-subtabs.js" defer></script>
     <script src="assets/js/assignments.data.js" defer></script>
     <script src="assets/js/assignment-tabs.js" defer></script>
   </body>

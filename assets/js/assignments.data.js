@@ -1,45 +1,7 @@
-// Nội dung panel cho tab A2 (tab A1 dùng a1-plan.data.js, tab E1–E3 dùng e1-plan.data.js).
+// Nội dung panel cho tab A2 (tab A1 dùng a1-plan.data.js, tab E1/E2/E3 dùng
+// e1-plan.data.js + e1-plan.js/e2-plan.js/e3-plan.js).
 // Key trùng với id của thẻ tab trong index.html.
 window.ASSIGNMENT_PANELS = {
-  "e1-e3": {
-    code: "E1–E3",
-    label: "BÀI TẬP · NỀN TẢNG",
-    deadline: "02/11 · 09/11/2026",
-    title: "Nền tảng phân loại ảnh",
-    lead: "Ba bài tập đi từ mô hình tuyến tính và CNN đến cơ chế attention và mạng hồi quy. Cả ba dùng chung một báo cáo PDF, cập nhật theo từng mốc nộp.",
-    deliverables: {
-      title: "Sản phẩm cần nộp",
-      items: [
-        "Code cho từng bài E1, E2, E3",
-        "Báo cáo PDF chung E1–E3, cập nhật theo mốc",
-        "Demo kết quả",
-      ],
-    },
-    milestones: [
-      {
-        code: "E1",
-        deadline: "02/11/2026",
-        title: "Softmax, MLP và CNN",
-        topics: ["Softmax", "MLP", "CNN"],
-      },
-      {
-        code: "E2",
-        deadline: "02/11/2026",
-        title: "Attention và tokenization",
-        topics: ["Multi-Head Self-Attention", "Tokenization"],
-      },
-      {
-        code: "E3",
-        deadline: "09/11/2026",
-        title: "LSTM và GRU trên chuỗi ảnh",
-        topics: ["LSTM", "GRU", "Chuỗi ảnh"],
-      },
-    ],
-    resources: [
-      ["Báo cáo chung E1–E3", "Xem PDF", "reports/exercises.pdf"],
-      ["Demo", "Sẽ cập nhật"],
-    ],
-  },
   a2: {
     code: "A2",
     label: "BÀI TẬP LỚN · CHỦ ĐỀ TỰ CHỌN",

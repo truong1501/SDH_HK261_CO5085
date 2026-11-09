@@ -25,7 +25,7 @@
   citecolor=black,
 }
 
-\graphicspath{{../E1/results/}{../E2/results/}{../E2/results/eda/}}
+\graphicspath{{../E1/results/}{../E2/results/}{../E2/results/eda/}{../E3/results/}}
 
 \title{\textbf{Báo cáo bài tập E1--E3}\\[0.3em]
 \large Học sâu và ứng dụng trong thị giác máy tính\\
@@ -51,7 +51,7 @@ Trần Lê Hoàng Long (2570443)
 
 \vspace{0.5cm}
 \begin{center}
-Bản này gồm E1 và E2. E3 sẽ được bổ sung vào cùng file ở hạn nộp tiếp theo.
+Bản này gồm E1, E2 và E3.
 \end{center}
 
 \clearpage
@@ -723,8 +723,161 @@ convolution, chứ chưa thay thế được convolution.
 \clearpage
 \section{E3: LSTM và GRU trên chuỗi ảnh}
 
-Phần này sẽ được bổ sung trong lần cập nhật tiếp theo của báo cáo, đúng hạn
-nộp của E3 (09/11/2026).
+\subsection{Mục tiêu}
+
+Bài E3 mô hình hóa ảnh Fashion-MNIST như dữ liệu chuỗi, dùng LSTM và GRU để
+phân loại, rồi so với baseline không hồi quy (MLP, CNN) đã có từ E1 trên cùng
+split. Mục tiêu là xem recurrent network, vốn thiết kế cho dữ liệu tuần tự
+một chiều, xử lý ảnh hai chiều tốt đến đâu so với mạng coi ảnh là vector phẳng
+(MLP) hay mạng có inductive bias không gian (CNN).
+
+\subsection{Hai cách biến ảnh thành chuỗi}
+
+\begin{table}[H]
+\centering
+\caption{Hai cách biến ảnh $28{\times}28$ thành chuỗi token}
+\label{tab:e3-seq}
+\begin{tabular}{llcc}
+\toprule
+Cách & Mô tả & Số bước ($T$) & Chiều mỗi bước \\
+\midrule
+\texttt{row} & Mỗi hàng pixel là một bước thời gian & 28 & 28 \\
+\texttt{patch} & Ô $4{\times}4$ không chồng lấn, quét theo hàng & 49 & 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\texttt{row} giữ nguyên toàn bộ một hàng ảnh làm vector đầu vào ở mỗi bước, nên
+mỗi bước có ngữ cảnh ngang đầy đủ của hàng đó. \texttt{patch} chia ảnh thành
+lưới $7{\times}7$ ô $4{\times}4$, trải phẳng mỗi ô thành vector 16 chiều rồi
+quét từ trái sang phải, trên xuống dưới; mỗi bước chỉ thấy một vùng cục bộ nhỏ,
+mô hình phải tự tích lũy ngữ cảnh không gian qua 49 bước hồi quy. Cả hai cách
+đều không chồng lấn và không học thêm phép chiếu token (khác với \texttt{patch4}
+của E2, vốn có thêm một lớp Linear chiếu token); dữ liệu đưa thẳng vào
+LSTM/GRU.
+
+\subsection{Kiến trúc}
+
+Cả LSTM và GRU dùng \texttt{nn.LSTM}/\texttt{nn.GRU} của PyTorch, một tầng, hidden
+size 128, lấy hidden state ở bước cuối cùng làm đặc trưng cho head phân loại
+\texttt{Linear(128, 10)}. Số tham số:
+\begin{align*}
+\text{LSTM} &= 4 \times \text{hidden} \times (\text{input} + \text{hidden} + 2) + (\text{hidden} \times 10 + 10) \\
+\text{GRU} &= 3 \times \text{hidden} \times (\text{input} + \text{hidden} + 2) + (\text{hidden} \times 10 + 10)
+\end{align*}
+LSTM có 4 cổng (input, forget, cell, output), GRU có 3 cổng (reset, update,
+candidate), nên với cùng hidden size và cùng đầu vào, GRU luôn ít tham số hơn
+LSTM khoảng 25\%.
+
+\begin{table}[H]
+\centering
+\caption{Số tham số của bốn cấu hình}
+\begin{tabular}{llr}
+\toprule
+Mô hình & Cách biến chuỗi & Số tham số \\
+\midrule
+LSTM & \texttt{row} & 82.186 \\
+GRU & \texttt{row} & 61.962 \\
+LSTM & \texttt{patch} & 76.042 \\
+GRU & \texttt{patch} & 57.354 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cả bốn cấu hình có số tham số nhỏ hơn nhiều so với MLP (235.146) và CNN
+(421.834) của E1, vì trọng số LSTM/GRU được chia sẻ qua mọi bước thời gian
+(giống cơ chế weight sharing của convolution qua mọi vị trí không gian).
+
+\subsection{Cấu hình huấn luyện}
+
+\begin{table}[H]
+\centering
+\caption{Cấu hình huấn luyện dùng chung cho bốn cấu hình}
+\begin{tabular}{ll}
+\toprule
+Thuộc tính & Giá trị \\
+\midrule
+Optimizer & Adam \\
+Learning rate & $10^{-3}$ \\
+Batch size & 128 \\
+Epoch & 20 \\
+Seed & 42 \\
+Dữ liệu & Train 55.000, validation 5.000, test 10.000 (giống E1) \\
+Chọn checkpoint & Validation accuracy cao nhất \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Training loop tự viết theo thứ tự forward $\to$ loss $\to$
+\texttt{optimizer.zero\_grad()} $\to$ \texttt{loss.backward()} $\to$
+\texttt{optimizer.step()}, giống vòng lặp đã dùng ở E1. Baseline MLP và CNN
+không huấn luyện lại; nhóm load checkpoint \texttt{best.pt} đã có từ E1 và chỉ
+chạy lại đánh giá trên tập test, đảm bảo dùng đúng cùng split và cùng điều
+kiện so sánh.
+
+\subsection{Kết quả}
+
+\begin{table}[H]
+\centering
+\caption{So sánh bốn cấu hình LSTM/GRU với baseline MLP/CNN trên tập test}
+\label{tab:e3-results}
+\begin{tabular}{llrrrr}
+\toprule
+Mô hình & Chuỗi & Số tham số & Val acc. (\%) & Test acc. (\%) & Thời gian (giây) \\
+\midrule
+LSTM & row & 82.186 & 88,72 & 88,55 & 309,1 \\
+GRU & row & 61.962 & 89,36 & 88,95 & 296,3 \\
+LSTM & patch & 76.042 & 86,44 & 86,89 & 294,7 \\
+GRU & patch & 57.354 & 87,22 & 86,75 & 291,6 \\
+MLP (E1) & -- & 235.146 & 87,32 & 87,39 & 299,7 \\
+CNN (E1) & -- & 421.834 & 91,76 & 91,45 & 236,2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../E3/results/loss_accuracy_curves.png}
+\caption{Đường cong loss và accuracy theo epoch của bốn cấu hình LSTM/GRU
+(nét đứt: train, nét liền: validation)}
+\label{fig:e3-curves}
+\end{figure}
+
+\textbf{row so với patch.} Với cùng kiến trúc, \texttt{row} luôn cho test
+accuracy cao hơn \texttt{patch}: LSTM 88,55\% so với 86,89\% (+1,66 điểm), GRU
+88,95\% so với 86,75\% (+2,20 điểm). Mỗi bước của \texttt{row} có ngữ cảnh một
+hàng đầy đủ (28 chiều), còn mỗi bước của \texttt{patch} chỉ có một ô
+$4{\times}4$ cục bộ (16 chiều); mô hình phải tự ghép nối ngữ cảnh không gian
+qua nhiều bước hồi quy hơn (49 so với 28 bước), nên khó học hơn.
+
+\textbf{LSTM so với GRU.} Kết quả không đồng nhất giữa hai cách biểu diễn.
+Với \texttt{row}, GRU tốt hơn LSTM (88,95\% so với 88,55\%, +0,40 điểm) dù ít
+hơn 25\% tham số. Với \texttt{patch}, LSTM nhỉnh hơn GRU một chút (86,89\% so
+với 86,75\%, +0,14 điểm) cũng dù GRU ít tham số hơn. Chênh lệch ở cả hai
+trường hợp đều nhỏ và chỉ chạy một seed, nên chưa đủ để kết luận kiến trúc nào
+luôn tốt hơn; điểm rõ ràng hơn là GRU đạt accuracy tương đương hoặc nhỉnh hơn
+LSTM với ít tham số hơn đáng kể, nên hiệu quả hơn về capacity.
+
+\textbf{So với baseline MLP/CNN.} Hai cấu hình \texttt{row} (88,55\% và
+88,95\%) vượt MLP (87,39\%) dù có ít tham số hơn MLP nhiều lần (82.186 và
+61.962 so với 235.146), còn hai cấu hình \texttt{patch} (86,89\% và 86,75\%)
+lại thấp hơn MLP. Không cấu hình LSTM/GRU nào vượt được CNN (91,45\%). Điều
+này cho thấy khả năng “bắt phụ thuộc thời gian” của LSTM/GRU giúp tích lũy
+ngữ cảnh không gian tốt hơn một MLP phẳng khi chuỗi đủ thông tin mỗi bước
+(\texttt{row}), nhưng cơ chế hồi quy tuần tự một chiều vẫn không thay thế
+được inductive bias không gian hai chiều của convolution: CNN xử lý đồng thời
+các vùng lân cận theo cả hai trục, trong khi LSTM/GRU phải truyền thông tin
+qua nhiều bước mới liên kết được các phần ảnh ở xa nhau theo chiều dọc.
+
+\subsection{Hạn chế}
+
+Kết quả E3 dựa trên một seed (42) và một lần chạy cho mỗi cấu hình, nên các
+chênh lệch nhỏ (dưới 0,5 điểm phần trăm, như giữa LSTM và GRU) chưa đủ để kết
+luận chắc chắn, tương tự lưu ý đã nêu ở mục 2.7 và 3.6. Nhóm cũng chưa làm
+phân tích lỗi theo từng lớp (confusion matrix) cho E3 như đã làm ở E1 và E2,
+do giới hạn thời gian; đây là phần có thể bổ sung sau. Baseline MLP/CNN lấy
+lại từ checkpoint E1 nên không cùng epoch/optimizer với LSTM/GRU (xem mục 2.3
+và bảng trên), giống hạn chế đã nêu ở mục 4 khi so E1 với E2.
 
 \clearpage
 \section*{Phụ lục}
@@ -740,21 +893,25 @@ nộp của E3 (09/11/2026).
 Nội dung & File trong repo \\
 \midrule
 Split dùng chung & \texttt{E1/splits/train\_idx.npy, val\_idx.npy, split\_meta.json} \\
-Môi trường và output lúc chạy & \texttt{E1/notebooks/E1\_Colab.ipynb, E2/notebooks/E2\_Colab.ipynb} \\
+Môi trường và output lúc chạy & \texttt{E1/notebooks/E1\_Colab.ipynb, E2/notebooks/E2\_Colab.ipynb, E3/notebooks/E3\_Colab.ipynb} \\
 Kết quả E1 & \texttt{E1/results/comparison\_table.json; E1/results/<model>/history.csv, summary.json} \\
 Cấu hình E2 & \texttt{E2/src/experiments.py} \\
 Đối chiếu MSA & \texttt{E2/results/msa\_check.json} \\
 Kết quả E2 & \texttt{E2/results/comparison\_table.json; E2/results/<tên thí nghiệm>/history.csv, summary.json} \\
+Cách biến chuỗi của E3 & \texttt{E3/src/sequences.py} \\
+Kết quả E3 & \texttt{E3/results/comparison\_table.json; E3/results/<tên cấu hình>/history.csv, summary.json} \\
+Baseline MLP/CNN của E3 & \texttt{E3/results/baseline\_table.json} (đánh giá lại checkpoint E1) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection*{Khai báo hỗ trợ AI}
 
-Nhóm dùng công cụ AI (Claude Code) để hỗ trợ viết code khung cho E1 và E2
+Nhóm dùng công cụ AI (Claude Code) để hỗ trợ viết code khung cho E1, E2 và E3
 (\texttt{data.py}, \texttt{models.py}, \texttt{train.py}, \texttt{evaluate.py}
-và các file tương ứng của E2 như \texttt{tokenizers.py}, \texttt{attention.py})
-cùng ví dụ sử dụng, và gợi ý các thí nghiệm cần làm. Nhóm sửa đổi, bổ sung
+và các file tương ứng như \texttt{tokenizers.py}, \texttt{attention.py} của E2,
+\texttt{sequences.py}, \texttt{baseline.py} của E3) cùng ví dụ sử dụng, và gợi
+ý các thí nghiệm cần làm. Nhóm sửa đổi, bổ sung
 thêm vào template rồi tự chạy thí nghiệm trên Colab để lấy số liệu. Sau khi
 có kết quả, AI hỗ trợ tổng hợp và viết báo cáo, nhóm đọc và sửa lại sau đó. AI
 cũng hỗ trợ viết test, vẽ sơ đồ, dàn trang PDF và chỉnh README. Nhóm đã đọc,

@@ -1,0 +1,50 @@
+[
+  {
+    "model": "lstm",
+    "seq": "row",
+    "num_params": 82186,
+    "best_val_acc": 0.8872,
+    "test_acc": 0.8855,
+    "train_time_sec": 309.13020873069763
+  },
+  {
+    "model": "gru",
+    "seq": "row",
+    "num_params": 61962,
+    "best_val_acc": 0.8936,
+    "test_acc": 0.8895,
+    "train_time_sec": 296.26452827453613
+  },
+  {
+    "model": "lstm",
+    "seq": "patch",
+    "num_params": 76042,
+    "best_val_acc": 0.8644,
+    "test_acc": 0.8689,
+    "train_time_sec": 294.7369954586029
+  },
+  {
+    "model": "gru",
+    "seq": "patch",
+    "num_params": 57354,
+    "best_val_acc": 0.8722,
+    "test_acc": 0.8675,
+    "train_time_sec": 291.61296343803406
+  },
+  {
+    "model": "mlp",
+    "seq": "-",
+    "num_params": 235146,
+    "best_val_acc": 0.8732,
+    "test_acc": 0.8739,
+    "train_time_sec": 299.68114018440247
+  },
+  {
+    "model": "cnn",
+    "seq": "-",
+    "num_params": 421834,
+    "best_val_acc": 0.9176,
+    "test_acc": 0.9145,
+    "train_time_sec": 236.17819833755493
+  }
+]
