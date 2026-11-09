@@ -14,6 +14,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
+import yaml  # noqa: E402
+
+from .plan import FULL, SWEEP_LRS, TUNED, selected_dirs, selected_lr, sweep_table  # noqa: E402
 
 MODE_ORDER = ["scratch", "freeze_all", "partial", "full"]
 MODE_LABEL = {"scratch": "From-scratch", "freeze_all": "Freeze toàn bộ",
@@ -21,15 +24,26 @@ MODE_LABEL = {"scratch": "From-scratch", "freeze_all": "Freeze toàn bộ",
 
 
 def load_runs(out_root, include_smoke=False):
+    """metrics.json của các run đưa vào bảng chính.
+
+    R3/R4/R7/R8: khi đã dò LR xong, chỉ lấy thư mục chạy ở LR được chọn (src/plan.py);
+    các điểm dò LR còn lại chỉ xuất hiện trong lr_sweep. Chưa dò xong thì dùng LR mặc định.
+    """
+    chosen = selected_dirs(out_root)
     rows = []
     for path in glob.glob(os.path.join(out_root, "*", "metrics.json")):
         d = os.path.basename(os.path.dirname(path))
         if d.endswith("_smoke") and not include_smoke:
             continue
-        if "_lr" in d:  # run dò LR, không đưa vào bảng chính
-            continue
         with open(path) as f:
             m = json.load(f)
+        if chosen is not None and m["run_id"] in TUNED and not d.endswith("_smoke"):
+            if d not in chosen:
+                continue
+        elif "_lr" in d:
+            continue
+        with open(os.path.join(os.path.dirname(path), "config.yaml"), encoding="utf-8") as f:
+            m["lr_backbone"] = yaml.safe_load(f)["mode"]["lr_backbone"]
         m["dir"] = os.path.dirname(path)
         rows.append(m)
     if not rows:
@@ -53,18 +67,19 @@ def summary_table(df):
         trainable=("params_trainable", "first"), total=("params_total", "first"),
         train_min=("train_time_s", lambda s: s.mean() / 60),
         peak_mem=("peak_mem_gb", "mean"), tput=("throughput_img_s", "mean"),
-        gpu=("gpu", "first"),
+        gpu=("gpu", "first"), lr=("lr_backbone", "first"),
     ).reset_index().sort_values("run_id")
     return agg
 
 
 def to_markdown(agg):
-    lines = ["| Run | Mô hình | Chế độ | Seeds | Top-1 (%) | Top-5 (%) | Macro-F1 (%) | Trainable | "
+    lines = ["| Run | Mô hình | Chế độ | LR backbone | Seeds | Top-1 (%) | Top-5 (%) | Macro-F1 (%) | Trainable | "
              "Thời gian train (phút) | VRAM đỉnh (GB) | Ảnh/s | GPU |",
-             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+             "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for _, r in agg.iterrows():
+        lr = "—" if pd.isna(r.lr) else f"{r.lr:g}"
         lines.append(
-            f"| {r.run_id} | {r.model} | {MODE_LABEL.get(r['mode'], r['mode'])} | {r.n_seeds} | "
+            f"| {r.run_id} | {r.model} | {MODE_LABEL.get(r['mode'], r['mode'])} | {lr} | {r.n_seeds} | "
             f"{fmt(r.top1, r.top1_std, r.n_seeds)} | {fmt(r.top5, r.top5_std, r.n_seeds)} | "
             f"{fmt(r.f1, r.f1_std, r.n_seeds)} | {r.trainable / 1e6:.2f}M | {r.train_min:.1f} | "
             f"{r.peak_mem:.1f} | {r.tput:.0f} | {r.gpu} |")
@@ -418,6 +433,37 @@ def plot_efficiency(df, fig_dir):
     plt.close(fig)
 
 
+def lr_sweep_report(out_root, fig_dir):
+    """Val top-1 của full finetune seed 42 theo LR backbone (protocol mục 7); chỉ dùng validation."""
+    table = sweep_table(out_root)
+    if all(v is None for row in table.values() for v in row.values()):
+        return ""
+    selection = selected_lr(out_root, write=True) or {}
+    fig, ax = plt.subplots(figsize=(6, 4))
+    for model, row in table.items():
+        pts = [(lr, v * 100) for lr, v in row.items() if v is not None]
+        ax.plot(*zip(*pts), marker="o", color=MODEL_COLOR.get(model), label=MODEL_LABEL.get(model, model))
+        if model in selection:
+            ax.scatter(selection[model], row[selection[model]] * 100, s=160, facecolors="none",
+                       edgecolors=MODEL_COLOR.get(model), linewidths=2)
+    ax.set(xscale="log", xlabel="LR backbone", ylabel="Validation top-1 (%)", xticks=list(SWEEP_LRS),
+           title="Dò LR backbone, full finetune seed 42 (vòng tròn = LR được chọn)")
+    ax.set_xticklabels([f"{lr:g}" for lr in SWEEP_LRS])
+    ax.minorticks_off()
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(os.path.join(fig_dir, "lr_sweep.png"), dpi=150)
+    plt.close(fig)
+    lines = ["\n## Dò LR backbone (full finetune, seed 42, validation top-1 %)\n",
+             "| Mô hình | " + " | ".join(f"{lr:g}" for lr in SWEEP_LRS) + " | Chọn |",
+             "|---|" + "---|" * (len(SWEEP_LRS) + 1)]
+    for model, row in table.items():
+        cells = ["—" if v is None else f"{v * 100:.2f}" for v in row.values()]
+        pick = f"{selection[model]:g}" if model in selection else "chưa đủ"
+        lines.append(f"| {MODEL_LABEL.get(model, model)} | " + " | ".join(cells) + f" | {pick} |")
+    return "\n".join(lines)
+
+
 def to_latex(agg):
     """Bảng booktabs cho báo cáo LaTeX (\\usepackage{booktabs})."""
     def tex(s):
@@ -463,6 +509,7 @@ def main():
     md.append("\n## 10 cặp lớp nhầm nhiều nhất\n")
     md.append(confusion_report(df, classes, args.fig_dir))
 
+    md.append(lr_sweep_report(args.out_root, args.fig_dir))
     plot_mode_compare(df, args.fig_dir)
     plot_curves_by_mode(df, args.fig_dir)
     plot_efficiency(df, args.fig_dir)

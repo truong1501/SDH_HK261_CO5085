@@ -1,0 +1,21 @@
+run_id: R1
+seed: 42
+model_key: resnet50
+timm_name: resnet50.a1_in1k
+mode:
+  name: scratch
+  pretrained: false
+  freeze: none
+  epochs: 100
+  lr_backbone: 0.0005
+  lr_head: 0.0005
+  warmup_epochs: 5
+  weight_decay: 0.05
+  drop_path: 0.1
+  aug: strong
+  mixup: true
+batch_size: 256
+img_size: 224
+num_classes: 101
+smoke: false
+notes: []

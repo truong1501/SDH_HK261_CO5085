@@ -22,15 +22,19 @@ A1/
 
 ## Chạy
 
-**Server công ty/JupyterHub:** mở [A1_JupyterHub.ipynb](notebooks/A1_JupyterHub.ipynb). Có hàng đợi ưu tiên phần bắt buộc, ngân sách mềm 11 giờ, resume và export kết quả; xem [SERVER.md](SERVER.md). Không dùng Colab/Drive mount hoặc UI riêng.
+**Google Colab (cách chính):** mở [A1_Colab.ipynb](notebooks/A1_Colab.ipynb) trên runtime A100, chạy lần lượt cell 1 → 6. Notebook mount Drive, copy Food-101 về `/content/data`, in trạng thái từng run rồi train hàng đợi còn thiếu **trong kernel** (log từng epoch). Mất kết nối hoặc Interrupt: chạy lại cell 1, 2, 3, 5, 6 để resume. Cell 8 sinh bảng và toàn bộ hình báo cáo, cell 9 flush Drive.
 
-Mở `notebooks/A1_Colab.ipynb` trên Colab (runtime A100) và chạy lần lượt. Hoặc dòng lệnh, trong thư mục `A1`:
+Thứ tự chạy nằm trong `src/plan.py`. Theo protocol mục 7, notebook dò LR backbone {5e-5, 1e-4, 3e-4} với full finetune seed 42, chọn theo validation cho từng mô hình (`runs/lr_selection.json`), rồi dùng LR đó cho R3/R7 và seed 43/44 của R4/R8. Run ở LR khác 1e-4 có hậu tố `_lr` trong tên thư mục; `summarize` chỉ đưa run ở LR đã chọn vào bảng chính và vẽ thêm `figures/lr_sweep.png`.
+
+JupyterHub ([A1_JupyterHub.ipynb](notebooks/A1_JupyterHub.ipynb), [SERVER.md](SERVER.md)) là phương án tuỳ chọn.
+
+Dòng lệnh tương đương, trong thư mục `A1`:
 
 ```bash
 python -m src.train --run R2 R6 --data_root /content/data      # freeze toàn bộ, 3 seed
 python -m src.train --run R4 R8 R3 R7 --seeds 42                # finetune
 python -m src.train --run R1 R5                                 # from-scratch 100 epoch
-python -m src.summarize --out_root runs --fig_dir figures       # bảng + biểu đồ
+python -m src.summarize --out_root runs --fig_dir figures --data_root /content/data
 ```
 
 Run đã có `metrics.json` sẽ được bỏ qua; run dở sẽ resume từ `last.pt`.

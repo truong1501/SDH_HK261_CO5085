@@ -1,0 +1,29 @@
+{
+  "run_id": "R8",
+  "seed": 42,
+  "model": "deit_s",
+  "mode": "full",
+  "timm_name": "deit_small_patch16_224.fb_in1k",
+  "params_total": 21704549,
+  "params_trainable": 21704549,
+  "test_top1": 0.8883960396039604,
+  "test_top5": 0.9796831683168317,
+  "test_macro_f1": 0.8881010151370942,
+  "test_loss": 0.39674338698387146,
+  "throughput_img_s": 9187.557975710903,
+  "notes": [
+    "lr_backbone override: 0.0001 -> 0.0003"
+  ],
+  "epochs_run": 15,
+  "best_epoch": 14,
+  "best_val_top1": 0.8458085808580859,
+  "train_time_s": 994.9928044619992,
+  "time_per_epoch_s": 66.33285363079995,
+  "peak_mem_gb": 9.345276928,
+  "feature_cache": false,
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "amp_dtype": "torch.bfloat16",
+  "torch": "2.14.1+cu130",
+  "torchvision": "0.29.1+cu130",
+  "timm": "1.0.31"
+}
